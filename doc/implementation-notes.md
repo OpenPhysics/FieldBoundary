@@ -17,9 +17,10 @@ Two screens share:
 - View widgets under `src/common/view/` and tool toggles on `SharedModel`
 
 Each screen owns a `SharedModel` (components / field lines / protractor / angles /
-surface normal / pillbox-loop state). The bound-source visibility Property lives
-on the screen model: `showBoundChargeProperty` on `ElectricModel`,
-`showBoundCurrentProperty` on `MagneticModel`.
+surface normal / pillbox-loop state). The Angles toggle shows both the θ₁/θ₂
+readout and the play-area arcs from the surface normal. The bound-source
+visibility Property lives on the screen model: `showBoundChargeProperty` on
+`ElectricModel`, `showBoundCurrentProperty` on `MagneticModel`.
 
 State flow (Electric):
 

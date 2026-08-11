@@ -192,16 +192,3 @@ function tally(top: number, bottom: number, right: number, enclosedFree: number)
     enclosedFree,
   };
 }
-
-/**
- * Reflect a medium-2 physics vector (Et, En) across the interface into the lower
- * half-plane as (Et, -En). Used only by component-axis overlays that project
- * component magnitudes onto the t/n axes on each side of the boundary.
- *
- * NOT used for field arrows or field lines: those anchor medium-2 vectors with
- * their tip at the interface so the field reads as continuous (pointing toward
- * +n̂), matching medium 1 — see BoundaryVectorsNode / FieldLinesNode.
- */
-export function medium2DisplayVector(physics: Vector2): Vector2 {
-  return new Vector2(physics.x, -physics.y);
-}

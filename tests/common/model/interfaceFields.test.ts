@@ -10,7 +10,6 @@ import {
   boundSurfaceCurrent,
   fieldFromPolar,
   magnetization,
-  medium2DisplayVector,
   pillboxFlux,
   polarization,
   refractElectric,
@@ -41,12 +40,6 @@ describe("interfaceFields", () => {
     expect(field.x).toBeCloseTo(0);
     expect(field.y).toBeCloseTo(2);
     expect(angleFromNormal(field)).toBeCloseTo(0);
-  });
-
-  it("medium2DisplayVector flips the normal for drawing", () => {
-    const display = medium2DisplayVector(new Vector2(1, 2));
-    expect(display.x).toBeCloseTo(1);
-    expect(display.y).toBeCloseTo(-2);
   });
 
   it("satisfies tanθ₂/tanθ₁ = ε₂/ε₁ for E field lines", () => {

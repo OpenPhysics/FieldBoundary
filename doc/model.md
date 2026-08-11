@@ -108,9 +108,14 @@ tip at the interface and its tail at \((-F_t,-F_n)\), so for equal media the two
 arrows are parallel and form one straight field line. Field lines are likewise
 continuous (straight when \(\varepsilon_1=\varepsilon_2\), kinked otherwise).
 Companion \(\vec{D}\) or \(\vec{B}\) arrows are auto-scaled relative to the
-primary so large \(\varepsilon_r\)/\(\mu_r\) stay on-screen. Component-axis
-overlays still reflect medium-2 magnitudes into the lower half-plane via
-`medium2DisplayVector` to compare \(|E_n|\)/\(|D_n|\) across the interface.
+primary so large \(\varepsilon_r\)/\(\mu_r\) stay on-screen. Component overlays
+are drawn as the two edges of each field's projection rectangle that meet at
+the far end of its own arrow (tip in medium 1, tail in medium 2), rather than
+on the \(t\)/\(n\) axes through the origin — same lengths, but four fields no
+longer stack their eight segments onto two lines. Collinear quantities
+(\(\vec{E},\vec{D},\vec{P}\)) are each drawn in their own lane, a fixed
+sideways pixel offset that never changes a length or an angle
+(`view/vectorLanes.ts`).
 The companion scale factor is shown next to the \(\vec{D}\)/\(\vec{B}\) label
 (e.g. ×0.46) so the drawn lengths are not read as true relative magnitudes.
 The model-view transform is isotropic — \(2\,\mathrm{MODEL\_HALF\_HEIGHT}\) is

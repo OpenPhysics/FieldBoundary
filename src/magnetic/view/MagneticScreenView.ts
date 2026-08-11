@@ -68,6 +68,8 @@ export class MagneticScreenView extends InterfaceScreenView {
             toolsHeadingStringProperty: a11y.controls.toolsHeadingStringProperty,
             fluxBoxStringProperty: a11y.controls.fluxBoxStringProperty,
             fluxBoxHeightStringProperty: a11y.controls.fluxBoxHeightStringProperty,
+            showPrimaryStringProperty: a11y.controls.showPrimaryStringProperty,
+            showCompanionStringProperty: a11y.controls.showCompanionStringProperty,
           },
           reversal: {
             reversedProperty: new DerivedProperty([model.h1Property, model.h2Property], isTangentialReversed),
@@ -98,6 +100,9 @@ export class MagneticScreenView extends InterfaceScreenView {
         primary2Label: ui.labelH2StringProperty,
         companion1Label: ui.labelB1StringProperty,
         companion2Label: ui.labelB2StringProperty,
+        primarySymbol: ui.symbolHStringProperty,
+        companionSymbol: ui.symbolBStringProperty,
+        boundSymbol: ui.symbolMStringProperty,
         parameterLabel: ui.murStringProperty,
         magnitudeLabel: ui.magnitudeHStringProperty,
         freeSourceTitle: ui.surfaceCurrentTitleStringProperty,

@@ -68,6 +68,8 @@ export class ElectricScreenView extends InterfaceScreenView {
             toolsHeadingStringProperty: a11y.controls.toolsHeadingStringProperty,
             fluxBoxStringProperty: a11y.controls.fluxBoxStringProperty,
             fluxBoxHeightStringProperty: a11y.controls.fluxBoxHeightStringProperty,
+            showPrimaryStringProperty: a11y.controls.showPrimaryStringProperty,
+            showCompanionStringProperty: a11y.controls.showCompanionStringProperty,
           },
           reversal: {
             reversedProperty: new DerivedProperty([model.e2Property], isNormalReversed),
@@ -98,6 +100,9 @@ export class ElectricScreenView extends InterfaceScreenView {
         primary2Label: ui.labelE2StringProperty,
         companion1Label: ui.labelD1StringProperty,
         companion2Label: ui.labelD2StringProperty,
+        primarySymbol: ui.symbolEStringProperty,
+        companionSymbol: ui.symbolDStringProperty,
+        boundSymbol: ui.symbolPStringProperty,
         parameterLabel: ui.epsrStringProperty,
         magnitudeLabel: ui.magnitudeEStringProperty,
         freeSourceTitle: ui.surfaceChargeTitleStringProperty,

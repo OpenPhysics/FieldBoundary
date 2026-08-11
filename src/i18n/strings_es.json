@@ -19,6 +19,13 @@
     "muMetal": "Mu-metal",
     "custom": "Personalizado",
     "tools": "Herramientas",
+    "vectors": "Vectores",
+    "symbolE": "E",
+    "symbolD": "D",
+    "symbolP": "P",
+    "symbolH": "H",
+    "symbolB": "B",
+    "symbolM": "M",
     "components": "Mostrar componentes",
     "fieldLines": "Líneas de campo",
     "protractor": "Transportador",
@@ -138,6 +145,8 @@
         "surfaceChargeHelp": "Cero significa que no hay carga libre, y entonces la componente normal de D es continua.",
         "surfaceChargeValue": "{{value}} unidades de carga",
         "toolsHeading": "Herramientas",
+        "showPrimary": "Mostrar el campo eléctrico E",
+        "showCompanion": "Mostrar el desplazamiento eléctrico D",
         "fluxBox": "Caja de Gauss; muévela a lo largo de la interfaz",
         "fluxBoxHeight": "Altura de la caja; aplánala hacia la interfaz"
       }
@@ -178,6 +187,8 @@
         "surfaceCurrentHelp": "Cero significa que no hay corriente libre, y entonces la componente tangencial de H es continua. El sentido positivo sale de la página.",
         "surfaceCurrentValue": "{{value}} unidades de corriente",
         "toolsHeading": "Herramientas",
+        "showPrimary": "Mostrar el campo magnético H",
+        "showCompanion": "Mostrar la densidad de flujo magnético B",
         "fluxBox": "Espira de Ampère; muévela a lo largo de la interfaz",
         "fluxBoxHeight": "Altura de la espira; aplánala hacia la interfaz"
       }

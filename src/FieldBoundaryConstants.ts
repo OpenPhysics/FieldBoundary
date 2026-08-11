@@ -150,6 +150,16 @@ export const ARROW_HEAD_HEIGHT = 14;
 export const ARROW_TAIL_WIDTH = 5;
 export const COMPANION_ARROW_TAIL_WIDTH = 3.5;
 
+/**
+ * Sideways separation between adjacent vector lanes (view pixels).
+ *
+ * E, D and P are collinear by construction, so drawn from a common anchor they
+ * stack on one ray and the shortest disappears under the longest. Each is given
+ * its own lane instead — see `view/vectorLanes.ts`. Wide enough to separate the
+ * tails at a glance, narrow enough that the three still read as one direction.
+ */
+export const VECTOR_LANE_SPACING = 9;
+
 FieldBoundaryNamespace.register("FieldBoundaryConstants", {
   LAYOUT_WIDTH,
   LAYOUT_HEIGHT,
@@ -182,6 +192,7 @@ FieldBoundaryNamespace.register("FieldBoundaryConstants", {
   FIELD_LINE_COUNT,
   COMPANION_SCALE_HEADROOM,
   BOUND_SCALE_HEADROOM,
+  VECTOR_LANE_SPACING,
   FLUX_BOX_WIDTH,
   FLUX_BOX_HALF_HEIGHT_RANGE,
   DEFAULT_FLUX_BOX_HALF_HEIGHT,

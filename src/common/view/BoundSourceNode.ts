@@ -10,7 +10,9 @@
  *
  * Bound glyphs use hollow dashed discs (vs solid free-source discs) and sit
  * slightly above the interface so they stay distinct when σ_f / K_f is also
- * nonzero.
+ * nonzero. The P / M arrows follow the same convention — dashed outline — and
+ * are drawn one lane to the far side of the primary (see `vectorLanes.ts`),
+ * since P is collinear with E and would otherwise be buried under it.
  */
 import { Multilink, type Property, type TReadOnlyProperty } from "scenerystack/axon";
 import { Vector2 } from "scenerystack/dot";
@@ -28,6 +30,7 @@ import {
 } from "../../FieldBoundaryConstants.js";
 import { displayScale, formatScaleBadge } from "./displayScale.js";
 import { createChargeMarker, createCurrentMarker, MARKER_RADIUS } from "./interfaceMarkers.js";
+import { BOUND_LANE, laneOffset } from "./vectorLanes.js";
 
 const MAX_MARKERS = 9;
 /** View-pixel offset of bound glyphs above the interface (away from the free source). */
@@ -62,8 +65,8 @@ export class BoundSourceNode extends Node {
       tailWidth: COMPANION_ARROW_TAIL_WIDTH,
       stroke: FieldBoundaryColors.polarizationColorProperty,
       lineWidth: 1.5,
-      fill: FieldBoundaryColors.polarizationColorProperty,
-      opacity: 0.9,
+      lineDash: [6, 4],
+      fill: null,
     };
     const arrow1 = new ArrowNode(0, 0, 0, 0, arrowOptions);
     const arrow2 = new ArrowNode(0, 0, 0, 0, arrowOptions);
@@ -89,16 +92,24 @@ export class BoundSourceNode extends Node {
     const glyphLayer = new Node();
     this.children = [arrow1, arrow2, label1, label2, scaleBadge, glyphLayer, sourceLabel];
 
+    // Both helpers shift the arrow onto BOUND_LANE — the opposite side of the
+    // ray from the companion (D / B) lane, so E, D and P each get their own.
     const setArrowMedium1 = (arrow: ArrowNode, physicsTip: Vector2): Vector2 => {
       const tipView = modelViewTransform.modelToViewPosition(physicsTip);
-      arrow.setTailAndTip(originView.x, originView.y, tipView.x, tipView.y);
-      return tipView;
+      const shift = laneOffset(tipView.minus(originView), BOUND_LANE);
+      const tail = originView.plus(shift);
+      const tip = tipView.plus(shift);
+      arrow.setTailAndTip(tail.x, tail.y, tip.x, tip.y);
+      return tip;
     };
 
     const setArrowMedium2 = (arrow: ArrowNode, physics: Vector2): Vector2 => {
       const tailView = modelViewTransform.modelToViewPosition(physics.timesScalar(-1));
-      arrow.setTailAndTip(tailView.x, tailView.y, originView.x, originView.y);
-      return tailView;
+      const shift = laneOffset(originView.minus(tailView), BOUND_LANE);
+      const tail = tailView.plus(shift);
+      const tip = originView.plus(shift);
+      arrow.setTailAndTip(tail.x, tail.y, tip.x, tip.y);
+      return tail;
     };
 
     const positiveColorProperty =

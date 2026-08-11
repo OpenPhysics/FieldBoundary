@@ -19,6 +19,13 @@
     "muMetal": "Mu-métal",
     "custom": "Personnalisé",
     "tools": "Outils",
+    "vectors": "Vecteurs",
+    "symbolE": "E",
+    "symbolD": "D",
+    "symbolP": "P",
+    "symbolH": "H",
+    "symbolB": "B",
+    "symbolM": "M",
     "components": "Afficher les composantes",
     "fieldLines": "Lignes de champ",
     "protractor": "Rapporteur",
@@ -138,6 +145,8 @@
         "surfaceChargeHelp": "Zéro signifie aucune charge libre, et la composante normale de D est alors continue.",
         "surfaceChargeValue": "{{value}} unités de charge",
         "toolsHeading": "Outils",
+        "showPrimary": "Afficher le champ électrique E",
+        "showCompanion": "Afficher le déplacement électrique D",
         "fluxBox": "Boîte de Gauss ; déplacez-la le long de l'interface",
         "fluxBoxHeight": "Hauteur de la boîte ; aplatissez-la vers l'interface"
       }
@@ -178,6 +187,8 @@
         "surfaceCurrentHelp": "Zéro signifie aucun courant libre, et la composante tangentielle de H est alors continue. Le sens positif sort de la page.",
         "surfaceCurrentValue": "{{value}} unités de courant",
         "toolsHeading": "Outils",
+        "showPrimary": "Afficher le champ magnétique H",
+        "showCompanion": "Afficher l'induction magnétique B",
         "fluxBox": "Boucle d'Ampère ; déplacez-la le long de l'interface",
         "fluxBoxHeight": "Hauteur de la boucle ; aplatissez-la vers l'interface"
       }

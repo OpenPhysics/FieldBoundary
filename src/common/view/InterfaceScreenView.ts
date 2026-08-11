@@ -25,6 +25,7 @@ import { StringManager } from "../../i18n/StringManager.js";
 import { FLAT_RESET_ALL_BUTTON_OPTIONS } from "../FieldBoundaryButtonOptions.js";
 import type { MaterialPreset, MaterialPresetId } from "../model/MaterialPresets.js";
 import type { SharedModel } from "../model/SharedModel.js";
+import { AngleArcsNode } from "./AngleArcsNode.js";
 import { AngleReadoutNode, type AngleReadoutStrings, createParameterRatioProperty } from "./AngleReadoutNode.js";
 import { BoundaryVectorsNode } from "./BoundaryVectorsNode.js";
 import { BoundSourceNode } from "./BoundSourceNode.js";
@@ -65,6 +66,8 @@ export type InterfaceScreenViewConfig = {
       toolsHeadingStringProperty: TReadOnlyProperty<string>;
       fluxBoxStringProperty: TReadOnlyProperty<string>;
       fluxBoxHeightStringProperty: TReadOnlyProperty<string>;
+      showPrimaryStringProperty: TReadOnlyProperty<string>;
+      showCompanionStringProperty: TReadOnlyProperty<string>;
     };
     /** Announced when a component in medium 2 reverses direction. */
     reversal: {
@@ -98,6 +101,10 @@ export type InterfaceScreenViewConfig = {
   primary2Label: TReadOnlyProperty<string>;
   companion1Label: TReadOnlyProperty<string>;
   companion2Label: TReadOnlyProperty<string>;
+  /** Bare symbols for the Tools "Vectors" checkboxes: E/D/P or H/B/M. */
+  primarySymbol: TReadOnlyProperty<string>;
+  companionSymbol: TReadOnlyProperty<string>;
+  boundSymbol: TReadOnlyProperty<string>;
   parameterLabel: TReadOnlyProperty<string>;
   magnitudeLabel: TReadOnlyProperty<string>;
   freeSourceTitle: TReadOnlyProperty<string>;
@@ -190,6 +197,8 @@ export class InterfaceScreenView extends ScreenView {
         config.companion1Property,
         config.companion2Property,
         config.freeSourceProperty,
+        config.shared.showPrimaryVectorProperty,
+        config.shared.showCompanionVectorProperty,
       ),
     );
 
@@ -218,6 +227,8 @@ export class InterfaceScreenView extends ScreenView {
       companionProperty: config.companion1Property,
       transmittedPrimaryProperty: config.primary2Property,
       transmittedCompanionProperty: config.companion2Property,
+      showPrimaryProperty: config.shared.showPrimaryVectorProperty,
+      showCompanionProperty: config.shared.showCompanionVectorProperty,
       primaryColorProperty: config.primaryColorProperty,
       companionColorProperty: config.companionColorProperty,
       primary1Label: config.primary1Label,
@@ -286,9 +297,25 @@ export class InterfaceScreenView extends ScreenView {
       new RichDragListener({
         positionProperty: this.protractorPositionProperty,
         dragBoundsProperty: new Property<Bounds2 | null>(protractorDragBounds),
+        // positionProperty drives center, not translation — without this the
+        // pointer-to-origin offset jumps the protractor on press.
+        dragListenerOptions: {
+          useParentOffset: true,
+        },
       }),
     );
     playLayer.addChild(this.protractor);
+
+    // Arcs at the interface make "θ from the normal" explicit; the readout
+    // below is the numeric companion. Both share showAnglesProperty.
+    playLayer.addChild(
+      new AngleArcsNode(modelViewTransform, {
+        visibleProperty: config.shared.showAnglesProperty,
+        primary1Property: config.primary1Property,
+        primary2Property: config.primary2Property,
+        colorProperty: config.primaryColorProperty,
+      }),
+    );
 
     const angleReadout = new AngleReadoutNode(
       config.shared.showAnglesProperty,
@@ -416,6 +443,14 @@ export class InterfaceScreenView extends ScreenView {
         surfaceNormal: ui.surfaceNormalStringProperty,
         fluxBox: config.fluxBoxToolLabel,
         boundSource: config.boundSourceToolLabel,
+        vectors: ui.vectorsStringProperty,
+        primarySymbol: config.primarySymbol,
+        companionSymbol: config.companionSymbol,
+        boundSymbol: config.boundSymbol,
+        showPrimary: a11y.controls.showPrimaryStringProperty,
+        showCompanion: a11y.controls.showCompanionStringProperty,
+        primaryColor: config.primaryColorProperty,
+        companionColor: config.companionColorProperty,
       },
       config.boundSource.showProperty,
       a11y.controls.toolsHeadingStringProperty,

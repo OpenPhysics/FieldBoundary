@@ -19,6 +19,13 @@
     "muMetal": "Mu-metal",
     "custom": "Custom",
     "tools": "Tools",
+    "vectors": "Vectors",
+    "symbolE": "E",
+    "symbolD": "D",
+    "symbolP": "P",
+    "symbolH": "H",
+    "symbolB": "B",
+    "symbolM": "M",
     "components": "Show components",
     "fieldLines": "Field lines",
     "protractor": "Protractor",
@@ -138,6 +145,8 @@
         "surfaceChargeHelp": "Zero means no free charge, and normal D is then continuous.",
         "surfaceChargeValue": "{{value}} charge units",
         "toolsHeading": "Tools",
+        "showPrimary": "Show the electric field E",
+        "showCompanion": "Show the electric displacement D",
         "fluxBox": "Gaussian pillbox; move it along the interface",
         "fluxBoxHeight": "Pillbox height; collapse it toward the interface"
       }
@@ -178,6 +187,8 @@
         "surfaceCurrentHelp": "Zero means no free current, and tangential H is then continuous. Positive is out of the page.",
         "surfaceCurrentValue": "{{value}} current units",
         "toolsHeading": "Tools",
+        "showPrimary": "Show the magnetic field H",
+        "showCompanion": "Show the magnetic flux density B",
         "fluxBox": "Amperian loop; move it along the interface",
         "fluxBoxHeight": "Loop height; collapse it toward the interface"
       }

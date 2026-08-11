@@ -3,6 +3,11 @@
  *
  * Primary + companion field arrows in each medium. The primary tip in medium 1
  * is draggable (angle only; magnitude comes from the model slider).
+ *
+ * The companion (D / B) is a scaled copy of the primary, so it is drawn one
+ * lane to the side and as a hollow outline rather than a solid arrow — see
+ * `vectorLanes.ts`. Without both, the two arrows are one indistinguishable
+ * stack on a single ray.
  */
 import { Multilink, type TReadOnlyProperty } from "scenerystack/axon";
 import { Vector2 } from "scenerystack/dot";
@@ -19,12 +24,15 @@ import {
   COMPANION_SCALE_HEADROOM,
 } from "../../FieldBoundaryConstants.js";
 import { displayScale, formatScaleBadge } from "./displayScale.js";
+import { COMPANION_LANE, laneOffset, PRIMARY_LANE } from "./vectorLanes.js";
 
 export type BoundaryVectorsNodeOptions = {
   primaryProperty: TReadOnlyProperty<Vector2>;
   companionProperty: TReadOnlyProperty<Vector2>;
   transmittedPrimaryProperty: TReadOnlyProperty<Vector2>;
   transmittedCompanionProperty: TReadOnlyProperty<Vector2>;
+  showPrimaryProperty: TReadOnlyProperty<boolean>;
+  showCompanionProperty: TReadOnlyProperty<boolean>;
   primaryColorProperty: TReadOnlyProperty<Color>;
   companionColorProperty: TReadOnlyProperty<Color>;
   primary1Label: TReadOnlyProperty<string>;
@@ -43,36 +51,28 @@ export class BoundaryVectorsNode extends Node {
 
     const originView = modelViewTransform.modelToViewPosition(new Vector2(0, 0));
 
-    const primary1 = new ArrowNode(0, 0, 0, 0, {
+    // Solid = the field you drag. Hollow outline = the quantity derived from it.
+    // The fill/outline contrast is what still separates D from E when a student
+    // is looking at the arrowheads rather than the tails.
+    const primaryArrowOptions = {
       headWidth: ARROW_HEAD_WIDTH,
       headHeight: ARROW_HEAD_HEIGHT,
       tailWidth: ARROW_TAIL_WIDTH,
       stroke: null,
       fill: options.primaryColorProperty,
-    });
-    const companion1 = new ArrowNode(0, 0, 0, 0, {
+    };
+    const companionArrowOptions = {
       headWidth: ARROW_HEAD_WIDTH - 2,
       headHeight: ARROW_HEAD_HEIGHT - 2,
       tailWidth: COMPANION_ARROW_TAIL_WIDTH,
-      stroke: null,
-      fill: options.companionColorProperty,
-      opacity: 0.85,
-    });
-    const primary2 = new ArrowNode(0, 0, 0, 0, {
-      headWidth: ARROW_HEAD_WIDTH,
-      headHeight: ARROW_HEAD_HEIGHT,
-      tailWidth: ARROW_TAIL_WIDTH,
-      stroke: null,
-      fill: options.primaryColorProperty,
-    });
-    const companion2 = new ArrowNode(0, 0, 0, 0, {
-      headWidth: ARROW_HEAD_WIDTH - 2,
-      headHeight: ARROW_HEAD_HEIGHT - 2,
-      tailWidth: COMPANION_ARROW_TAIL_WIDTH,
-      stroke: null,
-      fill: options.companionColorProperty,
-      opacity: 0.85,
-    });
+      stroke: options.companionColorProperty,
+      lineWidth: 1.8,
+      fill: null,
+    };
+    const primary1 = new ArrowNode(0, 0, 0, 0, primaryArrowOptions);
+    const companion1 = new ArrowNode(0, 0, 0, 0, companionArrowOptions);
+    const primary2 = new ArrowNode(0, 0, 0, 0, primaryArrowOptions);
+    const companion2 = new ArrowNode(0, 0, 0, 0, companionArrowOptions);
 
     const labelFont = new PhetFont({ size: 16, weight: "bold" });
     const p1Label = new Text(options.primary1Label, {
@@ -119,24 +119,34 @@ export class BoundaryVectorsNode extends Node {
     for (const label of [p1Label, p2Label, c1Label, c2Label, c1ScaleBadge, c2ScaleBadge]) {
       label.pickable = false;
     }
-    this.children = [
-      companion1,
-      companion2,
-      primary1,
-      primary2,
-      p1Label,
-      c1Label,
-      p2Label,
-      c2Label,
-      c1ScaleBadge,
-      c2ScaleBadge,
-      knob,
-    ];
 
-    const setArrow = (arrow: ArrowNode, physicsTip: Vector2): Vector2 => {
+    // Grouped into per-quantity layers so a toggle flips one Node rather than
+    // each member: `update` below still writes `.visible` on the scale badges,
+    // and writing that on a node whose own visibleProperty is bound to a shared
+    // toggle would flip the toggle itself.
+    const companionLayer = new Node({
+      visibleProperty: options.showCompanionProperty,
+      children: [companion1, companion2, c1Label, c2Label, c1ScaleBadge, c2ScaleBadge],
+    });
+    const primaryLayer = new Node({
+      visibleProperty: options.showPrimaryProperty,
+      children: [primary1, primary2, p1Label, p2Label],
+    });
+    // Knob last and always visible: it is the only way to change the field
+    // angle, so hiding the primary arrow must not take the control away with it.
+    this.children = [companionLayer, primaryLayer, knob];
+
+    // `lane` shifts the whole arrow sideways so collinear quantities do not
+    // stack; it never changes the arrow's length or angle. Lane 0 keeps the
+    // primary on the true anchor, where the drag knob and the component
+    // projections expect it.
+    const setArrow = (arrow: ArrowNode, physicsTip: Vector2, lane: number): Vector2 => {
       const tipView = modelViewTransform.modelToViewPosition(physicsTip);
-      arrow.setTailAndTip(originView.x, originView.y, tipView.x, tipView.y);
-      return tipView;
+      const shift = laneOffset(tipView.minus(originView), lane);
+      const tail = originView.plus(shift);
+      const tip = tipView.plus(shift);
+      arrow.setTailAndTip(tail.x, tail.y, tip.x, tip.y);
+      return tip;
     };
 
     // Medium-2 fields physically point toward +n̂ (up, into medium 1) so the field
@@ -144,10 +154,16 @@ export class BoundaryVectorsNode extends Node {
     // anchor the tip at the interface and put the tail at the negated physics
     // vector; the arrow then points along the field, matching medium 1. For equal
     // media the two arrows are parallel, forming one continuous field line.
-    const setArrowMedium2 = (arrow: ArrowNode, physics: Vector2): Vector2 => {
+    const setArrowMedium2 = (arrow: ArrowNode, physics: Vector2, lane: number): Vector2 => {
       const tailView = modelViewTransform.modelToViewPosition(physics.timesScalar(-1));
-      arrow.setTailAndTip(tailView.x, tailView.y, originView.x, originView.y);
-      return tailView;
+      // Offset from the arrow's own tail→tip direction, which points the same way
+      // as its medium-1 partner — so a given lane stays on one side of the ray
+      // across the whole picture.
+      const shift = laneOffset(originView.minus(tailView), lane);
+      const tail = tailView.plus(shift);
+      const tip = originView.plus(shift);
+      arrow.setTailAndTip(tail.x, tail.y, tip.x, tip.y);
+      return tail;
     };
 
     const update = (): void => {
@@ -157,10 +173,10 @@ export class BoundaryVectorsNode extends Node {
       const c2 = options.transmittedCompanionProperty.value;
       const scale = displayScale([c1, c2], [p1, p2], COMPANION_SCALE_HEADROOM);
 
-      const tipP1 = setArrow(primary1, p1);
-      const tipC1 = setArrow(companion1, c1.timesScalar(scale));
-      const tailP2 = setArrowMedium2(primary2, p2);
-      const tailC2 = setArrowMedium2(companion2, c2.timesScalar(scale));
+      const tipP1 = setArrow(primary1, p1, PRIMARY_LANE);
+      const tipC1 = setArrow(companion1, c1.timesScalar(scale), COMPANION_LANE);
+      const tailP2 = setArrowMedium2(primary2, p2, PRIMARY_LANE);
+      const tailC2 = setArrowMedium2(companion2, c2.timesScalar(scale), COMPANION_LANE);
 
       knob.center = tipP1;
       p1Label.leftBottom = tipP1.plusXY(12, -4);
