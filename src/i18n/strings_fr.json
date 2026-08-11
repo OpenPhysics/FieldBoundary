@@ -1,21 +1,75 @@
 {
-  "title": "Modèle de Simulation",
+  "title": "Frontière de champ",
   "screens": {
-    "sim": "Sim"
+    "intro": "Intro",
+    "magnetics": "Magnétique"
+  },
+  "ui": {
+    "medium1": "Milieu 1",
+    "medium2": "Milieu 2",
+    "epsr": "εᵣ",
+    "mur": "μᵣ",
+    "vacuum": "Vide",
+    "water": "Eau",
+    "glass": "Verre",
+    "highK": "Fort κ / μ",
+    "custom": "Personnalisé",
+    "tools": "Outils",
+    "components": "Afficher les composantes",
+    "fieldLines": "Lignes de champ",
+    "protractor": "Rapporteur",
+    "angles": "Angles",
+    "magnitudeE": "Magnitude de E₁",
+    "magnitudeH": "Magnitude de H₁",
+    "equationElectric": "Conditions aux limites E (σ_f = 0)",
+    "equationMagnetic": "Conditions aux limites M (K_f = 0)",
+    "labelE1": "E₁",
+    "labelE2": "E₂",
+    "labelD1": "D₁",
+    "labelD2": "D₂",
+    "labelH1": "H₁",
+    "labelH2": "H₂",
+    "labelB1": "B₁",
+    "labelB2": "B₂",
+    "tanRatioElectric": "tanθ₂/tanθ₁",
+    "tanRatioMagnetic": "tanθ₂/tanθ₁"
   },
   "a11y": {
-    "screenSummary": {
-      "playArea": "La zone de jeu affiche le contenu principal de la simulation.",
-      "controlArea": "La zone de contrôle comporte un bouton Tout réinitialiser qui ramène la simulation à son état initial.",
-      "interactionHint": "Explorez la simulation en interagissant avec ses commandes."
+    "intro": {
+      "screenSummary": {
+        "playArea": "La zone de jeu montre deux diélectriques séparés par une interface horizontale, avec les vecteurs E et D dans chaque milieu.",
+        "controlArea": "Les commandes règlent la permittivité relative de chaque milieu, la magnitude de E₁, et des options pour composantes, lignes de champ, rapporteur et angles. Tout réinitialiser restaure l'état initial.",
+        "interactionHint": "Faites glisser la pointe de E₁ pour changer son angle par rapport à la normale, puis ajustez εᵣ et observez quelles composantes restent continues."
+      },
+      "currentDetails": "Conditions aux limites électriques à une interface plane.",
+      "controls": {
+        "dragE1": "Direction du champ électrique incident E₁",
+        "eps1": "Permittivité relative du milieu 1",
+        "eps2": "Permittivité relative du milieu 2",
+        "preset1": "Matériau prédéfini du milieu 1",
+        "preset2": "Matériau prédéfini du milieu 2",
+        "magnitude": "Magnitude de E₁"
+      }
     },
-    "currentDetails": "La simulation est dans son état initial.",
-    "controls": {
-      "exampleControl": "Contrôle d'exemple"
+    "magnetics": {
+      "screenSummary": {
+        "playArea": "La zone de jeu montre deux milieux magnétiques séparés par une interface horizontale, avec les vecteurs H et B dans chaque milieu.",
+        "controlArea": "Les commandes règlent la perméabilité relative de chaque milieu, la magnitude de H₁, et des options pour composantes, lignes de champ, rapporteur et angles. Tout réinitialiser restaure l'état initial.",
+        "interactionHint": "Faites glisser la pointe de H₁ pour changer son angle par rapport à la normale, puis ajustez μᵣ et observez quelles composantes restent continues."
+      },
+      "currentDetails": "Conditions aux limites magnétiques à une interface plane.",
+      "controls": {
+        "dragH1": "Direction du champ magnétique incident H₁",
+        "mu1": "Perméabilité relative du milieu 1",
+        "mu2": "Perméabilité relative du milieu 2",
+        "preset1": "Matériau prédéfini du milieu 1",
+        "preset2": "Matériau prédéfini du milieu 2",
+        "magnitude": "Magnitude de H₁"
+      }
     }
   },
   "preferences": {
     "title": "Simulation",
-    "exampleToggle": "Exemple de bascule"
+    "exampleToggle": "Exemple d'interrupteur"
   }
 }

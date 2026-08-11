@@ -1,50 +1,45 @@
-# Model - SceneryStack Template
+# Model — Field Boundary
 
-This document describes the model (the underlying physics, math, and behavior) for the simulation, in
-terms appropriate for an educator. It is the companion to
-[implementation-notes.md](./implementation-notes.md), which targets developers.
+Planar interface between two linear isotropic media. Static fields only;
+no free surface charge or free surface current.
 
-> **Replace this entire file when forking.** The template ships with no domain physics — only the
-> section structure below. Real OpenPhysics sims (e.g. Stern Gerlach, Light Propagation) fill each
-> section with equations, ranges, and simplifications verified against their model code.
+## Coordinates
 
-## Overview
+- Origin on the interface; \(+x\) tangential; \(+\hat{n}=+\hat{y}\) into medium 1 (upper half-plane).
+- Medium 1: \(y>0\). Medium 2: \(y<0\).
+- Primary angle \(\theta\) is measured from \(\hat{n}\) toward \(+\hat{x}\):
+  \(E_t = |E|\sin\theta\), \(E_n = |E|\cos\theta\).
 
-*One or two paragraphs describing what the simulation models and the key ideas a student should take
-away. Write for a teacher, not a programmer — avoid code and class names.*
+## Electric (Intro)
 
-**Example (do not ship):** "The simulation models a block sliding on a ramp with adjustable friction
-and angle. Students see how the component of gravity parallel to the surface sets acceleration and
-how static vs kinetic friction limits motion."
+With \(\sigma_f=0\) and \(\varepsilon=\varepsilon_r\) (\(\varepsilon_0=1\)):
 
-The template's `SimModel` is an empty coordinator — replace it with real state and a `step(dt)` /
-`reset()` that implement your physics.
+\[
+E_{2t}=E_{1t},\qquad
+E_{2n}=\frac{\varepsilon_1}{\varepsilon_2}E_{1n},\qquad
+\vec{D}_i=\varepsilon_i\vec{E}_i.
+\]
 
-## Quantities and units
+Hence \(D_{1n}=D_{2n}\) and \(D_{2t}/D_{1t}=\varepsilon_2/\varepsilon_1\).
 
-*List the primary modeled quantities, their symbols, units (SI where applicable), and control ranges.
-Mirror the ranges enforced in your `*Constants.ts` or model `Range` options.*
+Field-line angles from the normal satisfy
 
-| Quantity | Symbol | Units | Range |
-|---|---|---|---|
-| *(example)* time | t | s | 0 – ∞ |
-| *(example)* mass | m | kg | 0.1 – 5.0 |
+\[
+\frac{\tan\theta_2}{\tan\theta_1}=\frac{\varepsilon_2}{\varepsilon_1}.
+\]
 
-## Governing equations
+## Magnetic (Magnetics)
 
-*State the equations or rules that drive the model, with a sentence explaining each. Use a smaller
-fixed time step than the screen default if the integration requires it; the model makes no assumption
-about frame rate.*
+With \(K_f=0\) and \(\mu=\mu_r\) (\(\mu_0=1\)):
 
-**Example (do not ship):** For a damped spring, m·a = −k·x − b·v (+ gravity if applicable).
+\[
+H_{2t}=H_{1t},\qquad
+H_{2n}=\frac{\mu_1}{\mu_2}H_{1n},\qquad
+\vec{B}_i=\mu_i\vec{H}_i.
+\]
 
-## Simplifications and assumptions
+## Display
 
-*Note anything intentionally idealized or omitted relative to the real-world phenomenon (e.g. no air
-resistance, point masses, instantaneous response), so educators can set expectations.*
-
-**Example (do not ship):** "Massless spring; linear damping only; motion confined to one dimension."
-
-## References
-
-*Optional: textbook sections, papers, or standards the model is based on.*
+Medium-2 physics vectors \((F_t,F_n)\) are drawn as \((F_t,-F_n)\) so the tip
+lies in the lower half-plane. Companion \(\vec{D}\) or \(\vec{B}\) arrows are
+auto-scaled relative to the primary so large \(\varepsilon_r\)/\(\mu_r\) stay on-screen.

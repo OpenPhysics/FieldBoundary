@@ -1,17 +1,71 @@
 {
-  "title": "SceneryStack Template",
+  "title": "Field Boundary",
   "screens": {
-    "sim": "Sim"
+    "intro": "Intro",
+    "magnetics": "Magnetics"
+  },
+  "ui": {
+    "medium1": "Medium 1",
+    "medium2": "Medium 2",
+    "epsr": "εᵣ",
+    "mur": "μᵣ",
+    "vacuum": "Vacuum",
+    "water": "Water",
+    "glass": "Glass",
+    "highK": "High-κ / μ",
+    "custom": "Custom",
+    "tools": "Tools",
+    "components": "Show components",
+    "fieldLines": "Field lines",
+    "protractor": "Protractor",
+    "angles": "Angles",
+    "magnitudeE": "E₁ magnitude",
+    "magnitudeH": "H₁ magnitude",
+    "equationElectric": "Electric BC (σ_f = 0)",
+    "equationMagnetic": "Magnetic BC (K_f = 0)",
+    "labelE1": "E₁",
+    "labelE2": "E₂",
+    "labelD1": "D₁",
+    "labelD2": "D₂",
+    "labelH1": "H₁",
+    "labelH2": "H₂",
+    "labelB1": "B₁",
+    "labelB2": "B₂",
+    "tanRatioElectric": "tanθ₂/tanθ₁",
+    "tanRatioMagnetic": "tanθ₂/tanθ₁"
   },
   "a11y": {
-    "screenSummary": {
-      "playArea": "The play area shows the main simulation content.",
-      "controlArea": "The control area has a Reset All button that returns the simulation to its starting state.",
-      "interactionHint": "Explore the simulation by interacting with its controls."
+    "intro": {
+      "screenSummary": {
+        "playArea": "The play area shows two dielectric media meeting at a horizontal interface, with electric field E and displacement D vectors in each medium.",
+        "controlArea": "Controls set relative permittivity for each medium, E₁ magnitude, and toggles for components, field lines, protractor, and angles. Reset All restores the starting state.",
+        "interactionHint": "Drag the tip of E₁ to change its angle from the surface normal, then adjust εᵣ and watch which components stay continuous."
+      },
+      "currentDetails": "Electric boundary conditions at a planar interface.",
+      "controls": {
+        "dragE1": "Incident electric field E₁ direction",
+        "eps1": "Relative permittivity of medium 1",
+        "eps2": "Relative permittivity of medium 2",
+        "preset1": "Material preset for medium 1",
+        "preset2": "Material preset for medium 2",
+        "magnitude": "Magnitude of E₁"
+      }
     },
-    "currentDetails": "The simulation is in its initial state.",
-    "controls": {
-      "exampleControl": "Example control"
+    "magnetics": {
+      "screenSummary": {
+        "playArea": "The play area shows two magnetic media meeting at a horizontal interface, with H and B vectors in each medium.",
+        "controlArea": "Controls set relative permeability for each medium, H₁ magnitude, and toggles for components, field lines, protractor, and angles. Reset All restores the starting state.",
+        "interactionHint": "Drag the tip of H₁ to change its angle from the surface normal, then adjust μᵣ and watch which components stay continuous."
+      },
+      "currentDetails": "Magnetic boundary conditions at a planar interface.",
+      "controls": {
+        "dragH1": "Incident magnetic field H₁ direction",
+        "mu1": "Relative permeability of medium 1",
+        "mu2": "Relative permeability of medium 2",
+        "preset1": "Material preset for medium 1",
+        "preset2": "Material preset for medium 2",
+        "magnitude": "Magnitude of H₁"
+      }
     }
   },
   "preferences": {

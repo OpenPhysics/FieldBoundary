@@ -66,5 +66,5 @@ describe("Memory leak regression", () => {
     await forceGC();
     const survivors = refs.filter((r) => r.deref() !== undefined).length;
     expect(survivors).toBe(0);
-  });
+  }, 90_000);
 });

@@ -1,15 +1,15 @@
-# SceneryStack Template
+# Field Boundary
 
-A reusable SceneryStack simulation template for one or N screens, built with
-[SceneryStack](https://scenerystack.org/), Vite 8, TypeScript 7, and Biome 2.
+Interactive Maxwell **planar interface** boundary conditions for \(\vec{E}/\vec{D}\) and \(\vec{H}/\vec{B}\). Drag the incident field, change \(\varepsilon_r\) or \(\mu_r\), and watch which components stay continuous — not Snell’s-law ray optics (see OpticsLab).
 
 ## Features
 
-- SceneryStack scaffold with model/view separation (`rename` + `scaffold-screens` for one or N screens)
+- Intro screen: dielectric interface with \(\vec{E}\) and \(\vec{D}\), \(\varepsilon_r\) presets/sliders, component overlay, field lines, protractor, and angle readouts
+- Magnetics screen: same interaction grammar for \(\vec{H}\) and \(\vec{B}\) with \(\mu_r\)
+- Equation strip highlighting continuous BC terms (\(E_t\), \(D_n\) or \(H_t\), \(B_n\))
 - English, Spanish, and French localization via `StringManager`
 - Default and projector color profiles
 - Progressive Web App (installable, offline-capable)
-- Git hooks for Biome pre-commit checks
 - Shared GitHub Actions CI via `OpenPhysics/Baton`
 
 ## Quick Start
@@ -36,7 +36,7 @@ npm start        # dev server → http://localhost:5173
 | `npm run fix` | Lint + auto-fix |
 | `npm run icons` | Regenerate PNG icons from `public/icons/icon.svg` |
 | `npm run rename` | Sim-level fork/rename (`--id`, `--name`) |
-| `npm run scaffold-screens` | Emit N fleet-named screen packages from `sim-screen/` (`--shared-model` optional) |
+| `npm run scaffold-screens` | Emit N fleet-named screen packages from `intro/` (`--shared-model` optional) |
 | `npm run clean` | Remove `dist/` |
 
 New sims start at `version: "0.0.0"` in `package.json`. Bump only when cutting a release (for example `npm version patch` and a matching git tag). Keep `name` in kebab-case; it is separate from the SceneryStack sim identifier in `src/init.ts`.
@@ -47,7 +47,7 @@ New sims start at `version: "0.0.0"` in `package.json`. Bump only when cutting a
 |---|---|---|
 | [SceneryStack](https://scenerystack.org/) | ^3.0.0 | Simulation framework |
 | [Vite](https://vitejs.dev/) | ^8 | Build tool + dev server |
-| [TypeScript](https://www.typescriptlang.org/) | ^7 | Type-safe JavaScript |
+| [TypeScript](https://typescriptlang.org/) | ^7 | Type-safe JavaScript |
 | [Biome](https://biomejs.dev/) | ^2.5 | Linting + formatting |
 | [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) | ^1 | PWA + service worker |
 

@@ -1,21 +1,75 @@
 {
-  "title": "Plantilla de Simulación",
+  "title": "Frontera de campos",
   "screens": {
-    "sim": "Sim"
+    "intro": "Introducción",
+    "magnetics": "Magnéticos"
+  },
+  "ui": {
+    "medium1": "Medio 1",
+    "medium2": "Medio 2",
+    "epsr": "εᵣ",
+    "mur": "μᵣ",
+    "vacuum": "Vacío",
+    "water": "Agua",
+    "glass": "Vidrio",
+    "highK": "Alto κ / μ",
+    "custom": "Personalizado",
+    "tools": "Herramientas",
+    "components": "Mostrar componentes",
+    "fieldLines": "Líneas de campo",
+    "protractor": "Transportador",
+    "angles": "Ángulos",
+    "magnitudeE": "Magnitud de E₁",
+    "magnitudeH": "Magnitud de H₁",
+    "equationElectric": "CC eléctricas (σ_f = 0)",
+    "equationMagnetic": "CC magnéticas (K_f = 0)",
+    "labelE1": "E₁",
+    "labelE2": "E₂",
+    "labelD1": "D₁",
+    "labelD2": "D₂",
+    "labelH1": "H₁",
+    "labelH2": "H₂",
+    "labelB1": "B₁",
+    "labelB2": "B₂",
+    "tanRatioElectric": "tanθ₂/tanθ₁",
+    "tanRatioMagnetic": "tanθ₂/tanθ₁"
   },
   "a11y": {
-    "screenSummary": {
-      "playArea": "El área de juego muestra el contenido principal de la simulación.",
-      "controlArea": "El área de control tiene un botón Restablecer todo que devuelve la simulación a su estado inicial.",
-      "interactionHint": "Explora la simulación interactuando con sus controles."
+    "intro": {
+      "screenSummary": {
+        "playArea": "El área de juego muestra dos medios dieléctricos unidos en una interfaz horizontal, con vectores E y D en cada medio.",
+        "controlArea": "Los controles fijan la permitividad relativa de cada medio, la magnitud de E₁ y opciones de componentes, líneas de campo, transportador y ángulos. Restablecer todo vuelve al estado inicial.",
+        "interactionHint": "Arrastra la punta de E₁ para cambiar su ángulo respecto a la normal, luego ajusta εᵣ y observa qué componentes permanecen continuos."
+      },
+      "currentDetails": "Condiciones de frontera eléctricas en una interfaz plana.",
+      "controls": {
+        "dragE1": "Dirección del campo eléctrico incidente E₁",
+        "eps1": "Permitividad relativa del medio 1",
+        "eps2": "Permitividad relativa del medio 2",
+        "preset1": "Material predefinido del medio 1",
+        "preset2": "Material predefinido del medio 2",
+        "magnitude": "Magnitud de E₁"
+      }
     },
-    "currentDetails": "La simulación está en su estado inicial.",
-    "controls": {
-      "exampleControl": "Control de ejemplo"
+    "magnetics": {
+      "screenSummary": {
+        "playArea": "El área de juego muestra dos medios magnéticos unidos en una interfaz horizontal, con vectores H y B en cada medio.",
+        "controlArea": "Los controles fijan la permeabilidad relativa de cada medio, la magnitud de H₁ y opciones de componentes, líneas de campo, transportador y ángulos. Restablecer todo vuelve al estado inicial.",
+        "interactionHint": "Arrastra la punta de H₁ para cambiar su ángulo respecto a la normal, luego ajusta μᵣ y observa qué componentes permanecen continuos."
+      },
+      "currentDetails": "Condiciones de frontera magnéticas en una interfaz plana.",
+      "controls": {
+        "dragH1": "Dirección del campo magnético incidente H₁",
+        "mu1": "Permeabilidad relativa del medio 1",
+        "mu2": "Permeabilidad relativa del medio 2",
+        "preset1": "Material predefinido del medio 1",
+        "preset2": "Material predefinido del medio 2",
+        "magnitude": "Magnitud de H₁"
+      }
     }
   },
   "preferences": {
     "title": "Simulación",
-    "exampleToggle": "Ejemplo de alternancia"
+    "exampleToggle": "Interruptor de ejemplo"
   }
 }
