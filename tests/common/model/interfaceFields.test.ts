@@ -4,10 +4,14 @@
 import { Vector2 } from "scenerystack/dot";
 import { describe, expect, it } from "vitest";
 import {
+  amperianCirculation,
   angleFromNormal,
   boundSurfaceCharge,
+  boundSurfaceCurrent,
   fieldFromPolar,
+  magnetization,
   medium2DisplayVector,
+  pillboxFlux,
   polarization,
   refractElectric,
   refractMagnetic,
@@ -144,5 +148,65 @@ describe("interfaceFields", () => {
     const { sigmaB, p1, p2 } = refractElectric(e1, 3, 3, 0);
     expect(sigmaB).toBeCloseTo(0);
     expect(p1.equals(p2)).toBe(true);
+  });
+
+  it("magnetization is (μ − 1)H and vanishes in vacuum", () => {
+    const h = new Vector2(1, 2);
+    expect(magnetization(h, 1).equals(new Vector2(0, 0))).toBe(true);
+    expect(magnetization(h, 5).x).toBeCloseTo(4);
+    expect(magnetization(h, 5).y).toBeCloseTo(8);
+  });
+
+  it("bound K_b explains the Bₜ jump: B₂ₜ − B₁ₜ = K_f + K_b", () => {
+    const h1 = new Vector2(0.8, 1.6);
+    const kf = 0.5;
+    const { b1, b2, m1, m2, boundCurrent } = refractMagnetic(h1, 2, 8, kf);
+    expect(boundCurrent).toBeCloseTo(boundSurfaceCurrent(m1, m2));
+    expect(b2.x - b1.x).toBeCloseTo(kf + boundCurrent);
+  });
+
+  it("with K_f = 0, the Bₜ jump is entirely bound current", () => {
+    const h1 = fieldFromPolar(2, Math.PI / 5);
+    const { b1, b2, boundCurrent } = refractMagnetic(h1, 1, 6, 0);
+    expect(b2.x - b1.x).toBeCloseTo(boundCurrent);
+  });
+
+  it("equal magnetic media have zero bound current when K_f = 0", () => {
+    const h1 = fieldFromPolar(2, Math.PI / 5);
+    const { boundCurrent, m1, m2 } = refractMagnetic(h1, 4, 4, 0);
+    expect(boundCurrent).toBeCloseTo(0);
+    expect(m1.equals(m2)).toBe(true);
+  });
+
+  it("pillbox flux equals the enclosed free charge (Gauss's law for D)", () => {
+    const e1 = fieldFromPolar(2, Math.PI / 5);
+    const sigmaF = 0.8;
+    const { d1, d2 } = refractElectric(e1, 2, 7, sigmaF);
+    for (const halfHeight of [1.5, 0.4, 0.01]) {
+      const tally = pillboxFlux(d1, d2, sigmaF, 2.4, halfHeight);
+      expect(tally.total).toBeCloseTo(tally.enclosedFree);
+      expect(tally.enclosedFree).toBeCloseTo(sigmaF * 2.4);
+    }
+  });
+
+  it("pillbox side faces cancel and shrink with the box height", () => {
+    const e1 = fieldFromPolar(2, Math.PI / 5);
+    const { d1, d2 } = refractElectric(e1, 2, 7);
+    const tall = pillboxFlux(d1, d2, 0, 2.4, 1.5);
+    const flat = pillboxFlux(d1, d2, 0, 2.4, 0.05);
+    expect(tall.sides).toBeCloseTo(0);
+    expect(tall.left).toBeCloseTo(-tall.right);
+    expect(Math.abs(flat.right)).toBeLessThan(Math.abs(tall.right));
+  });
+
+  it("loop circulation equals the enclosed free current (Ampère's law for H)", () => {
+    const h1 = fieldFromPolar(2, Math.PI / 5);
+    const kf = -0.6;
+    const { h2 } = refractMagnetic(h1, 3, 11, kf);
+    for (const halfHeight of [1.5, 0.4, 0.01]) {
+      const tally = amperianCirculation(h1, h2, kf, 2.4, halfHeight);
+      expect(tally.total).toBeCloseTo(tally.enclosedFree);
+      expect(tally.enclosedFree).toBeCloseTo(kf * 2.4);
+    }
   });
 });

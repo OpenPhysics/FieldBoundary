@@ -101,10 +101,8 @@ export class StringManager {
     return stringProperties.ui;
   }
 
-  /**
-   * Simulation-specific preference labels shown in Preferences → Simulation.
-   */
-  public getPreferences() {
-    return stringProperties.preferences;
+  /** Keyboard-help dialog headings and nouns. */
+  public getKeyboardHelpStrings() {
+    return stringProperties.a11y.keyboardHelp;
   }
 }

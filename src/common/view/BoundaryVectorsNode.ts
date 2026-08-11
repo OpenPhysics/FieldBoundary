@@ -16,7 +16,9 @@ import {
   ARROW_HEAD_WIDTH,
   ARROW_TAIL_WIDTH,
   COMPANION_ARROW_TAIL_WIDTH,
+  COMPANION_SCALE_HEADROOM,
 } from "../../FieldBoundaryConstants.js";
+import { displayScale, formatScaleBadge } from "./displayScale.js";
 
 export type BoundaryVectorsNodeOptions = {
   primaryProperty: TReadOnlyProperty<Vector2>;
@@ -90,6 +92,12 @@ export class BoundaryVectorsNode extends Node {
       fill: options.companionColorProperty,
     });
 
+    // The companion arrows are shrunk to stay on screen at large εᵣ / μᵣ. Say so
+    // on screen — otherwise the drawn lengths invite a false |D| : |E| reading.
+    const badgeFont = new PhetFont(11);
+    const c1ScaleBadge = new Text("", { font: badgeFont, fill: options.companionColorProperty });
+    const c2ScaleBadge = new Text("", { font: badgeFont, fill: options.companionColorProperty });
+
     const knob = new Circle(10, {
       cursor: "pointer",
       fill: options.primaryColorProperty,
@@ -101,17 +109,29 @@ export class BoundaryVectorsNode extends Node {
     });
 
     this.dragHandle = knob;
-    this.children = [companion1, companion2, primary1, primary2, p1Label, c1Label, p2Label, c2Label, knob];
-
-    const companionScale = (c1: Vector2, c2: Vector2): number => {
-      const maxLen = Math.max(c1.magnitude, c2.magnitude, 1e-6);
-      const primaryMax = Math.max(
-        options.primaryProperty.value.magnitude,
-        options.transmittedPrimaryProperty.value.magnitude,
-        1e-6,
-      );
-      return Math.min(1, (primaryMax * 1.15) / maxLen);
-    };
+    // Only the knob takes input. This layer is drawn ABOVE the medium panels so
+    // the tip stays grabbable at large magnitude (it otherwise lands under the
+    // upper-right panel around θ ≈ 40–65°), and non-pickable arrows and labels
+    // mean crossing a panel does not steal that panel's clicks.
+    for (const decoration of [primary1, primary2, companion1, companion2]) {
+      decoration.pickable = false;
+    }
+    for (const label of [p1Label, p2Label, c1Label, c2Label, c1ScaleBadge, c2ScaleBadge]) {
+      label.pickable = false;
+    }
+    this.children = [
+      companion1,
+      companion2,
+      primary1,
+      primary2,
+      p1Label,
+      c1Label,
+      p2Label,
+      c2Label,
+      c1ScaleBadge,
+      c2ScaleBadge,
+      knob,
+    ];
 
     const setArrow = (arrow: ArrowNode, physicsTip: Vector2): Vector2 => {
       const tipView = modelViewTransform.modelToViewPosition(physicsTip);
@@ -135,7 +155,7 @@ export class BoundaryVectorsNode extends Node {
       const c1 = options.companionProperty.value;
       const p2 = options.transmittedPrimaryProperty.value;
       const c2 = options.transmittedCompanionProperty.value;
-      const scale = companionScale(c1, c2);
+      const scale = displayScale([c1, c2], [p1, p2], COMPANION_SCALE_HEADROOM);
 
       const tipP1 = setArrow(primary1, p1);
       const tipC1 = setArrow(companion1, c1.timesScalar(scale));
@@ -147,6 +167,14 @@ export class BoundaryVectorsNode extends Node {
       c1Label.leftTop = tipC1.plusXY(12, 4);
       p2Label.leftTop = tailP2.plusXY(12, 4);
       c2Label.leftBottom = tailC2.plusXY(12, -4);
+
+      const badge = formatScaleBadge(scale);
+      c1ScaleBadge.string = badge;
+      c2ScaleBadge.string = badge;
+      c1ScaleBadge.visible = badge.length > 0;
+      c2ScaleBadge.visible = badge.length > 0;
+      c1ScaleBadge.leftTop = c1Label.leftBottom.plusXY(0, 1);
+      c2ScaleBadge.leftBottom = c2Label.leftTop.plusXY(0, -1);
     };
 
     Multilink.multilink(

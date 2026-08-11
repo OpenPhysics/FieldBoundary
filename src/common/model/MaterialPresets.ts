@@ -1,24 +1,57 @@
 /**
  * MaterialPresets.ts
  *
- * Named relative-permittivity / permeability presets for the media panels.
+ * Named material presets for the media panels. The two screens have separate
+ * lists: a shared list would be degenerate on the Magnetic screen, where every
+ * ordinary dielectric has μᵣ ≈ 1 and three of four entries would be
+ * indistinguishable from vacuum.
+ *
+ * Each list ends in a limiting case (conductor-like / ferromagnet) so the
+ * pedagogically interesting extreme is one click away rather than a slider
+ * hunt; selecting one fires the limiting-case callout in the play area.
  */
 
-export type MaterialPresetId = "vacuum" | "water" | "glass" | "highK" | "custom";
+export type MaterialPresetId =
+  // Electric
+  | "vacuum"
+  | "glass"
+  | "water"
+  | "conductor"
+  // Magnetic
+  | "air"
+  | "ferrite"
+  | "iron"
+  | "muMetal"
+  // Both
+  | "custom";
 
 export type MaterialPreset = {
   readonly id: MaterialPresetId;
-  readonly epsr: number;
-  readonly mur: number;
+  /** εᵣ on the Electric screen, μᵣ on the Magnetic screen. */
+  readonly value: number;
+  /** True for the extreme entries that name a limiting case when selected. */
+  readonly limitingCase?: boolean;
 };
 
-export const MATERIAL_PRESETS: readonly MaterialPreset[] = [
-  { id: "vacuum", epsr: 1, mur: 1 },
-  { id: "water", epsr: 80, mur: 1 }, // clamped by slider max when applied
-  { id: "glass", epsr: 5, mur: 1 },
-  { id: "highK", epsr: 20, mur: 8 },
+/** Relative permittivity εᵣ presets (Electric screen). */
+export const ELECTRIC_PRESETS: readonly MaterialPreset[] = [
+  { id: "vacuum", value: 1 },
+  { id: "glass", value: 5 },
+  { id: "water", value: 80 },
+  { id: "conductor", value: 1000, limitingCase: true },
 ];
 
-export function presetById(id: MaterialPresetId): MaterialPreset | null {
-  return MATERIAL_PRESETS.find((p) => p.id === id) ?? null;
+/**
+ * Relative permeability μᵣ presets (Magnetic screen). Real magnetic materials
+ * span four decades, which is the whole reason μ is interesting.
+ */
+export const MAGNETIC_PRESETS: readonly MaterialPreset[] = [
+  { id: "air", value: 1 },
+  { id: "ferrite", value: 1000 },
+  { id: "iron", value: 5000 },
+  { id: "muMetal", value: 20000, limitingCase: true },
+];
+
+export function presetById(presets: readonly MaterialPreset[], id: MaterialPresetId): MaterialPreset | null {
+  return presets.find((p) => p.id === id) ?? null;
 }

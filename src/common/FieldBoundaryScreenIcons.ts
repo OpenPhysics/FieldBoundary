@@ -4,9 +4,10 @@
  * Programmatic home-screen / navigation-bar icons for each screen.
  * Drawn on the standard PhET 548 × 373 canvas using FieldBoundaryColors.
  *
- * Motifs mirror the play area: two media half-planes, a dashed interface, and
- * primary + companion field arrows using the same tip-at-interface convention
- * as BoundaryVectorsNode (medium-2 tip on the boundary, continuous with +n̂).
+ * Motifs mirror the play area: two media half-planes, a dashed interface, a
+ * surface-normal guide, and primary + companion field arrows using the same
+ * tip-at-interface convention as BoundaryVectorsNode (medium-2 tip on the
+ * boundary, continuous with +n̂).
  */
 import type { TReadOnlyProperty } from "scenerystack/axon";
 import type { Vector2 } from "scenerystack/dot";
@@ -42,19 +43,22 @@ const COMPANION_HEAD_WIDTH = 28;
 const COMPANION_HEAD_HEIGHT = 24;
 const COMPANION_TAIL_WIDTH = 9;
 
+/** Half-length of the surface-normal reference tick (icon px). */
+const NORMAL_HALF = 150;
+
 function background(): Rectangle {
   return new Rectangle(0, 0, W, H, { fill: FieldBoundaryColors.backgroundColorProperty });
 }
 
 function iconFrom(content: Node): ScreenIcon {
   return new ScreenIcon(content, {
-    maxIconWidthProportion: 1,
-    maxIconHeightProportion: 1,
+    maxIconWidthProportion: 0.9,
+    maxIconHeightProportion: 0.9,
     fill: FieldBoundaryColors.backgroundColorProperty,
   });
 }
 
-/** Two media fills + dashed interface — same palette as InterfaceBackgroundNode. */
+/** Two media fills + dashed interface and surface-normal guide — same palette as InterfaceBackgroundNode. */
 function interfaceBackdrop(): Node {
   const medium1 = new Rectangle(0, 0, W, OY, {
     fill: FieldBoundaryColors.medium1FillProperty,
@@ -67,7 +71,14 @@ function interfaceBackdrop(): Node {
     lineWidth: 6,
     lineDash: [18, 14],
   });
-  return new Node({ children: [medium1, medium2, interfaceLine] });
+  // Surface-normal reference through the interface origin (faint; behind arrows).
+  const normalLine = new Line(OX, OY - NORMAL_HALF, OX, OY + NORMAL_HALF, {
+    stroke: FieldBoundaryColors.normalStrokeProperty,
+    lineWidth: 3,
+    lineDash: [10, 8],
+    opacity: 0.7,
+  });
+  return new Node({ children: [medium1, medium2, interfaceLine, normalLine] });
 }
 
 /**
@@ -88,7 +99,7 @@ function arrowMedium1(field: Vector2, fill: TReadOnlyProperty<Color>, companion:
     tailWidth: companion ? COMPANION_TAIL_WIDTH : PRIMARY_TAIL_WIDTH,
     stroke: null,
     fill,
-    opacity: companion ? 0.85 : 1,
+    opacity: companion ? 0.7 : 1,
   });
 }
 
@@ -103,7 +114,7 @@ function arrowMedium2(field: Vector2, fill: TReadOnlyProperty<Color>, companion:
     tailWidth: companion ? COMPANION_TAIL_WIDTH : PRIMARY_TAIL_WIDTH,
     stroke: null,
     fill,
-    opacity: companion ? 0.85 : 1,
+    opacity: companion ? 0.7 : 1,
   });
 }
 

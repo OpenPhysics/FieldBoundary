@@ -8,21 +8,19 @@
  *   Magnetic:  ⊙  markers (out of page, +ẑ) for K_f > 0,
  *              ⊗  markers (into page, −ẑ) for K_f < 0.
  *
- * Each marker sits on an opaque disc so the dashed interface stroke does not
- * show through. Marker count grows with |source|; nothing is drawn at zero.
+ * Marker count grows with |source|; nothing is drawn at zero. Glyph geometry is
+ * shared with the bound-source layer via `interfaceMarkers`.
  */
 import type { TReadOnlyProperty } from "scenerystack/axon";
-import { Vector2 } from "scenerystack/dot";
 import type { ModelViewTransform2 } from "scenerystack/phetcommon";
-import { Circle, type Color, Line, Node, Text } from "scenerystack/scenery";
-import { PhetFont } from "scenerystack/scenery-phet";
+import { Node } from "scenerystack/scenery";
 import FieldBoundaryColors from "../../FieldBoundaryColors.js";
 import { MODEL_HALF_WIDTH } from "../../FieldBoundaryConstants.js";
+import { createChargeMarker, createCurrentMarker } from "./interfaceMarkers.js";
 
 export type FreeSourceMode = "electric" | "magnetic";
 
 const MAX_MARKERS = 9;
-const MARKER_RADIUS = 11;
 
 export class FreeSourceOverlayNode extends Node {
   public constructor(
@@ -61,8 +59,8 @@ export class FreeSourceOverlayNode extends Node {
         const xView = modelViewTransform.modelToViewX(xModel);
         const marker =
           mode === "electric"
-            ? this.createChargeMarker(positive, colorProperty)
-            : this.createCurrentMarker(positive, colorProperty);
+            ? createChargeMarker(positive, colorProperty)
+            : createCurrentMarker(positive, colorProperty);
         marker.translate(xView, yView);
         markers.push(marker);
       }
@@ -71,54 +69,5 @@ export class FreeSourceOverlayNode extends Node {
     };
 
     sourceProperty.link(rebuild);
-  }
-
-  /** Opaque disc that masks the dashed interface under the glyph. */
-  private createBackdrop(): Circle {
-    return new Circle(MARKER_RADIUS, {
-      fill: FieldBoundaryColors.panelBackgroundColorProperty,
-      stroke: FieldBoundaryColors.panelBorderColorProperty,
-      lineWidth: 1,
-      pickable: false,
-    });
-  }
-
-  private createChargeMarker(positive: boolean, colorProperty: TReadOnlyProperty<Color>): Node {
-    const symbol = positive ? "+" : "−";
-    const text = new Text(symbol, {
-      font: new PhetFont({ size: 22, weight: "bold" }),
-      fill: colorProperty,
-      pickable: false,
-    });
-    text.center = Vector2.ZERO;
-    return new Node({ children: [this.createBackdrop(), text], pickable: false });
-  }
-
-  /**
-   * ⊙ for current out of page (+ẑ): circle outline with a filled center dot.
-   * ⊗ for current into page (−ẑ): circle outline with a cross.
-   */
-  private createCurrentMarker(positive: boolean, colorProperty: TReadOnlyProperty<Color>): Node {
-    const radius = MARKER_RADIUS - 2;
-    const ring = new Circle(radius, {
-      stroke: colorProperty,
-      lineWidth: 2.5,
-      pickable: false,
-    });
-
-    let inner: Node;
-    if (positive) {
-      inner = new Circle(2.6, { fill: colorProperty, pickable: false });
-    } else {
-      const d = radius * 0.55;
-      inner = new Node({
-        children: [
-          new Line(-d, -d, d, d, { stroke: colorProperty, lineWidth: 2.5, pickable: false }),
-          new Line(-d, d, d, -d, { stroke: colorProperty, lineWidth: 2.5, pickable: false }),
-        ],
-      });
-    }
-
-    return new Node({ children: [this.createBackdrop(), ring, inner], pickable: false });
   }
 }

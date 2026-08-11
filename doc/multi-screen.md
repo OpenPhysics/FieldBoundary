@@ -1,8 +1,9 @@
 # Multi-Screen Simulations
 
-This sim was scaffolded by `npm run scaffold-screens` into `src/intro/`, `src/magnetics/` (fleet naming:
-kebab folders with no `-screen` suffix). This guide covers the architecture and how to add
-another screen by hand.
+This sim has two screens, `src/electric/` and `src/magnetic/` (fleet naming: kebab
+folders with no `-screen` suffix), sharing the model skeleton and play-area layout
+under `src/common/`. This guide covers the architecture and how to add another
+screen by hand.
 
 ---
 

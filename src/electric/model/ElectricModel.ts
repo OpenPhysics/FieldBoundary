@@ -7,10 +7,12 @@ import { BooleanProperty, NumberProperty } from "scenerystack/axon";
 import { Vector2, Vector2Property } from "scenerystack/dot";
 import { DualMediaInterfaceModel } from "../../common/model/DualMediaInterfaceModel.js";
 import { refractElectric } from "../../common/model/interfaceFields.js";
+import { ELECTRIC_PRESETS } from "../../common/model/MaterialPresets.js";
 import {
   DEFAULT_EPS1,
   DEFAULT_EPS2,
   DEFAULT_SURFACE_CHARGE,
+  ELECTRIC_PARAMETER_RANGE,
   SURFACE_CHARGE_RANGE,
 } from "../../FieldBoundaryConstants.js";
 
@@ -40,18 +42,21 @@ export class ElectricModel extends DualMediaInterfaceModel {
 
   /**
    * Show polarization arrows and bound-charge glyphs (electric-only tool).
-   * Default on.
+   * Default OFF: it is the most advanced layer on the screen, and the sim's own
+   * sequencing rationale is that the simplest picture comes first.
    */
-  public readonly showBoundChargeProperty = new BooleanProperty(true);
+  public readonly showBoundChargeProperty = new BooleanProperty(false);
 
   public constructor() {
     super({
       defaultParam1: DEFAULT_EPS1,
       defaultParam2: DEFAULT_EPS2,
-      defaultMedium2Preset: "glass",
+      defaultMedium1Preset: "vacuum",
+      defaultMedium2Preset: "custom",
+      presets: ELECTRIC_PRESETS,
+      parameterRange: ELECTRIC_PARAMETER_RANGE,
       freeSourceDefault: DEFAULT_SURFACE_CHARGE,
       freeSourceRange: SURFACE_CHARGE_RANGE,
-      presetParameter: (preset) => preset.epsr,
     });
     this.connectFieldMultilink();
   }
@@ -74,5 +79,13 @@ export class ElectricModel extends DualMediaInterfaceModel {
   public override reset(): void {
     super.reset();
     this.showBoundChargeProperty.reset();
+  }
+
+  public override dispose(): void {
+    super.dispose();
+    this.p1Property.dispose();
+    this.p2Property.dispose();
+    this.boundChargeProperty.dispose();
+    this.showBoundChargeProperty.dispose();
   }
 }

@@ -10,16 +10,25 @@
     "epsr": "εᵣ",
     "mur": "μᵣ",
     "vacuum": "Vacuum",
-    "water": "Water",
     "glass": "Glass",
-    "highK": "High-κ / μ",
+    "water": "Water",
+    "conductorLike": "Conductor-like",
+    "air": "Air",
+    "ferrite": "Ferrite",
+    "iron": "Iron",
+    "muMetal": "Mu-metal",
     "custom": "Custom",
     "tools": "Tools",
     "components": "Show components",
     "fieldLines": "Field lines",
     "protractor": "Protractor",
     "angles": "Angles",
+    "surfaceNormal": "Surface normal",
+    "pillbox": "Gaussian pillbox",
+    "amperianLoop": "Amperian loop",
     "boundCharge": "Bound charge (P, σ_b)",
+    "magnetization": "Magnetization (M, K_b)",
+    "unitsNote": "Sim units: ε₀ = μ₀ = 1. Fields, σ_f and K_f are in arbitrary field units; εᵣ and μᵣ are dimensionless.",
     "magnitudeE": "E₁ magnitude",
     "magnitudeH": "H₁ magnitude",
     "surfaceChargeTitle": "Surface charge",
@@ -27,10 +36,7 @@
     "sigmaF": "σ_f",
     "sigmaB": "σ_b",
     "kF": "K_f",
-    "equationElectric": "Electric BC (σ_f = 0)",
-    "equationMagnetic": "Magnetic BC (K_f = 0)",
-    "equationElectricFree": "Electric BC (σ_f ≠ 0)",
-    "equationMagneticFree": "Magnetic BC (K_f ≠ 0)",
+    "kB": "K_b",
     "labelE1": "E₁",
     "labelE2": "E₂",
     "labelD1": "D₁",
@@ -41,47 +47,140 @@
     "labelH2": "H₂",
     "labelB1": "B₁",
     "labelB2": "B₂",
-    "tanRatioElectric": "tanθ₂/tanθ₁",
-    "tanRatioMagnetic": "tanθ₂/tanθ₁"
+    "labelM1": "M₁",
+    "labelM2": "M₂",
+    "tanRatio": "tanθ₂/tanθ₁",
+    "predictedElectric": "predicted ε₂/ε₁ = {{value}}",
+    "predictedMagnetic": "predicted μ₂/μ₁ = {{value}}",
+    "ratioSourcedElectric": "this ratio is not ε₂/ε₁ while σ_f ≠ 0",
+    "ratioSourcedMagnetic": "this ratio is not μ₂/μ₁ while K_f ≠ 0",
+    "equations": {
+      "electricTitle": "Electric BC (σ_f = 0)",
+      "electricTitleSourced": "Electric BC (σ_f ≠ 0)",
+      "magneticTitle": "Magnetic BC (K_f = 0)",
+      "magneticTitleSourced": "Magnetic BC (K_f ≠ 0)",
+      "eTangential": "E₁ₜ = E₂ₜ",
+      "dNormal": "D₁ₙ = D₂ₙ",
+      "dNormalJump": "D₁ₙ − D₂ₙ = σ_f",
+      "eNormal": "E₁ₙ ≠ E₂ₙ",
+      "dTangential": "D₁ₜ ≠ D₂ₜ",
+      "hTangential": "H₁ₜ = H₂ₜ",
+      "hTangentialJump": "H₂ₜ − H₁ₜ = K_f",
+      "bNormal": "B₁ₙ = B₂ₙ",
+      "hNormal": "H₁ₙ ≠ H₂ₙ",
+      "bTangential": "B₁ₜ ≠ B₂ₜ",
+      "duality": "Duality with the other screen:  Eₜ ↔ Hₜ,  Dₙ ↔ Bₙ,  σ_f ↔ K_f,  P ↔ M"
+    },
+    "flux": {
+      "electricTitle": "∮ D·dA over the pillbox",
+      "magneticTitle": "∮ H·dl around the loop",
+      "electricTop": "Top face (D₁ₙ w)",
+      "electricBottom": "Bottom face (−D₂ₙ w)",
+      "magneticTop": "Top leg (−H₁ₜ w)",
+      "magneticBottom": "Bottom leg (H₂ₜ w)",
+      "sides": "Side terms (cancel)",
+      "electricTotal": "Total ∮ D·dA",
+      "magneticTotal": "Total ∮ H·dl",
+      "electricEnclosed": "Q_f enclosed (σ_f w)",
+      "magneticEnclosed": "I_f enclosed (K_f w)",
+      "electricHint": "Drag the handle to collapse the box: the side terms → 0, leaving D₁ₙ − D₂ₙ = σ_f.",
+      "magneticHint": "Drag the handle to collapse the loop: the side terms → 0, leaving H₂ₜ − H₁ₜ = K_f."
+    },
+    "callout": {
+      "electricMedium2": "εᵣ₂ ≫ εᵣ₁ — E₂ swings almost parallel to the interface: E₂ₙ → 0 while E₂ₜ = E₁ₜ is unchanged.",
+      "electricMedium1": "εᵣ₁ ≫ εᵣ₂ — E₂ swings almost normal to the interface: E₂ₙ is amplified while E₂ₜ = E₁ₜ is unchanged.",
+      "electricMatched": "Matched media (εᵣ₁ = εᵣ₂) — no kink at all: the field line crosses straight through.",
+      "magneticMedium2": "μᵣ₂ ≫ μᵣ₁ — flux funnelling: B₂ swings almost parallel to the interface and is channelled along medium 2. This is how magnetic shielding works.",
+      "magneticMedium1": "μᵣ₁ ≫ μᵣ₂ — B₂ swings almost normal to the interface as the flux leaves the high-μ medium.",
+      "magneticMatched": "Matched media (μᵣ₁ = μᵣ₂) — no kink at all: the field line crosses straight through."
+    }
   },
   "a11y": {
+    "keyboardHelp": {
+      "moveItemsHeading": "Move the field tip, protractor, and box",
+      "materialListHeading": "Choose a material",
+      "materialSingular": "material",
+      "materialPlural": "materials"
+    },
     "electric": {
       "screenSummary": {
         "playArea": "The play area shows two dielectric media meeting at a horizontal interface, with electric field E and displacement D vectors in each medium.",
-        "controlArea": "Controls set relative permittivity for each medium, free surface charge σ_f, E₁ magnitude, and toggles for components, field lines, protractor, angles, and bound charge. Reset All restores the starting state.",
-        "interactionHint": "Drag the tip of E₁ to change its angle from the surface normal, then adjust εᵣ or σ_f and watch which components stay continuous. Turn on bound charge to see polarization P and σ_b that explain why Eₙ jumps."
+        "controlArea": "Controls set relative permittivity for each medium, free surface charge σ_f, E₁ magnitude, and toggles for components, field lines, protractor, angles, surface normal, the Gaussian pillbox, and bound charge. Reset All restores the starting state.",
+        "interactionHint": "Drag the tip of E₁ to change its angle from the surface normal, then adjust εᵣ or σ_f and listen for which components stay continuous. Turn on the Gaussian pillbox and collapse it to derive the boundary condition, or turn on bound charge to hear the σ_b that explains why Eₙ jumps."
       },
-      "currentDetails": "Electric boundary conditions at a planar interface.",
+      "details": {
+        "angles": "E₁ is {{theta1}} degrees from the surface normal; E₂ is {{theta2}} degrees.",
+        "materials": "Relative permittivity is {{param1}} in medium 1 and {{param2}} in medium 2.",
+        "tangentialContinuous": "Tangential E is continuous: E₁ₜ equals E₂ₜ.",
+        "normalCompanionContinuous": "There is no free surface charge, so normal D is continuous: D₁ₙ equals D₂ₙ.",
+        "normalCompanionJump": "Free surface charge is {{value}}, so normal D jumps by that amount across the interface.",
+        "normalRatio": "Normal E in medium 2 is {{ratio}} times normal E in medium 1.",
+        "normalReversed": "Normal E in medium 2 has reversed: the field there now points away from medium 1.",
+        "boundCharge": "Bound surface charge σ_b is {{value}}."
+      },
+      "alerts": {
+        "reversed": "The normal electric field in medium 2 has reversed and now points away from the interface.",
+        "restored": "The normal electric field in medium 2 points toward medium 1 again."
+      },
+      "angleReadout": "E₁ is {{theta1}} degrees from the normal; E₂ is {{theta2}} degrees.",
+      "fluxTally": "Total flux through the pillbox is {{total}}; the enclosed free charge is {{enclosed}}; each side face contributes {{sides}}.",
       "controls": {
         "dragE1": "Incident electric field E₁ direction",
         "eps1": "Relative permittivity of medium 1",
         "eps2": "Relative permittivity of medium 2",
+        "paramHelp": "Logarithmic slider from 1 to 1000. Vacuum is 1; glass is about 5; water is about 80.",
         "preset1": "Material preset for medium 1",
         "preset2": "Material preset for medium 2",
         "magnitude": "Magnitude of E₁",
-        "surfaceCharge": "Free surface charge density σ_f on the interface"
+        "magnitudeHelp": "Length of the incident field vector; its angle is set by dragging the tip.",
+        "magnitudeValue": "{{value}} field units",
+        "surfaceCharge": "Free surface charge density σ_f on the interface",
+        "surfaceChargeHelp": "Zero means no free charge, and normal D is then continuous.",
+        "surfaceChargeValue": "{{value}} charge units",
+        "toolsHeading": "Tools",
+        "fluxBox": "Gaussian pillbox; move it along the interface",
+        "fluxBoxHeight": "Pillbox height; collapse it toward the interface"
       }
     },
     "magnetic": {
       "screenSummary": {
-        "playArea": "The play area shows two magnetic media meeting at a horizontal interface, with H and B vectors in each medium.",
-        "controlArea": "Controls set relative permeability for each medium, free surface current K_f, H₁ magnitude, and toggles for components, field lines, protractor, and angles. Reset All restores the starting state.",
-        "interactionHint": "Drag the tip of H₁ to change its angle from the surface normal, then adjust μᵣ or K_f and watch which components stay continuous."
+        "playArea": "The play area shows two magnetic media meeting at a horizontal interface, with magnetic field H and induction B vectors in each medium.",
+        "controlArea": "Controls set relative permeability for each medium, free surface current K_f, H₁ magnitude, and toggles for components, field lines, protractor, angles, surface normal, the Amperian loop, and magnetization. Reset All restores the starting state.",
+        "interactionHint": "Drag the tip of H₁ to change its angle from the surface normal, then adjust μᵣ or K_f and listen for which components stay continuous. Turn on the Amperian loop and collapse it to derive the boundary condition, or turn on magnetization to hear the bound surface current K_b that explains why Bₜ jumps."
       },
-      "currentDetails": "Magnetic boundary conditions at a planar interface.",
+      "details": {
+        "angles": "H₁ is {{theta1}} degrees from the surface normal; H₂ is {{theta2}} degrees.",
+        "materials": "Relative permeability is {{param1}} in medium 1 and {{param2}} in medium 2.",
+        "tangentialContinuous": "There is no free surface current, so tangential H is continuous: H₁ₜ equals H₂ₜ.",
+        "tangentialJump": "Free surface current is {{value}}, so tangential H jumps by that amount across the interface.",
+        "normalCompanionContinuous": "Normal B is continuous: B₁ₙ equals B₂ₙ.",
+        "normalRatio": "Normal H in medium 2 is {{ratio}} times normal H in medium 1.",
+        "tangentialReversed": "Tangential H in medium 2 has reversed: it now points opposite to tangential H in medium 1.",
+        "boundCurrent": "Bound surface current K_b is {{value}}."
+      },
+      "alerts": {
+        "reversed": "The tangential magnetic field in medium 2 has reversed and now points the opposite way.",
+        "restored": "The tangential magnetic field in medium 2 points the same way as in medium 1 again."
+      },
+      "angleReadout": "H₁ is {{theta1}} degrees from the normal; H₂ is {{theta2}} degrees.",
+      "fluxTally": "Total circulation around the loop is {{total}}; the enclosed free current is {{enclosed}}; each side leg contributes {{sides}}.",
       "controls": {
         "dragH1": "Incident magnetic field H₁ direction",
         "mu1": "Relative permeability of medium 1",
         "mu2": "Relative permeability of medium 2",
+        "paramHelp": "Logarithmic slider from 1 to 20000. Air is 1; ferrite is about 1000; iron is about 5000; mu-metal is about 20000.",
         "preset1": "Material preset for medium 1",
         "preset2": "Material preset for medium 2",
         "magnitude": "Magnitude of H₁",
-        "surfaceCurrent": "Free surface current density K_f on the interface"
+        "magnitudeHelp": "Length of the incident field vector; its angle is set by dragging the tip.",
+        "magnitudeValue": "{{value}} field units",
+        "surfaceCurrent": "Free surface current density K_f on the interface",
+        "surfaceCurrentHelp": "Zero means no free current, and tangential H is then continuous. Positive is out of the page.",
+        "surfaceCurrentValue": "{{value}} current units",
+        "toolsHeading": "Tools",
+        "fluxBox": "Amperian loop; move it along the interface",
+        "fluxBoxHeight": "Loop height; collapse it toward the interface"
       }
     }
-  },
-  "preferences": {
-    "title": "Simulation",
-    "exampleToggle": "Example Toggle"
   }
 }

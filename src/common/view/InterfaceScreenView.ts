@@ -4,8 +4,8 @@
  * Shared play-area + control-column layout for Electric / Magnetic screens.
  * Screen-specific views map their model onto InterfaceScreenViewConfig.
  */
-import type { BooleanProperty, Property, TReadOnlyProperty } from "scenerystack/axon";
-import { Bounds2, type Range, Vector2 } from "scenerystack/dot";
+import { type BooleanProperty, Property, type TReadOnlyProperty } from "scenerystack/axon";
+import { Bounds2, type Range, Vector2, Vector2Property } from "scenerystack/dot";
 import { type EmptySelfOptions, optionize } from "scenerystack/phet-core";
 import { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { type Color, Node, Rectangle, RichDragListener, Text } from "scenerystack/scenery";
@@ -15,25 +15,32 @@ import FieldBoundaryColors from "../../FieldBoundaryColors.js";
 import {
   MODEL_HALF_HEIGHT,
   MODEL_HALF_WIDTH,
+  PLAY_AREA_HEIGHT,
   PLAY_AREA_RIGHT_GUTTER,
+  PLAY_AREA_TOP_INSET,
+  PLAY_AREA_WIDTH,
   SCREEN_VIEW_MARGIN,
 } from "../../FieldBoundaryConstants.js";
 import { StringManager } from "../../i18n/StringManager.js";
 import { FLAT_RESET_ALL_BUTTON_OPTIONS } from "../FieldBoundaryButtonOptions.js";
-import type { MaterialPresetId } from "../model/MaterialPresets.js";
+import type { MaterialPreset, MaterialPresetId } from "../model/MaterialPresets.js";
 import type { SharedModel } from "../model/SharedModel.js";
-import { AngleReadoutNode, createParameterRatioProperty } from "./AngleReadoutNode.js";
+import { AngleReadoutNode, type AngleReadoutStrings, createParameterRatioProperty } from "./AngleReadoutNode.js";
 import { BoundaryVectorsNode } from "./BoundaryVectorsNode.js";
-import { BoundPolarizationNode } from "./BoundPolarizationNode.js";
+import { BoundSourceNode } from "./BoundSourceNode.js";
 import type { ComponentOverlayMode } from "./ComponentOverlayNode.js";
 import { ComponentOverlayNode } from "./ComponentOverlayNode.js";
-import { EquationStripNode } from "./EquationStripNode.js";
+import { EquationStripNode, type EquationStripStrings } from "./EquationStripNode.js";
 import type { FieldBoundaryA11ySummaryStrings } from "./FieldBoundaryScreenSummaryContent.js";
 import { FieldBoundaryScreenSummaryContent } from "./FieldBoundaryScreenSummaryContent.js";
 import { FieldLinesNode } from "./FieldLinesNode.js";
+import { FluxBoxNode } from "./FluxBoxNode.js";
+import { FluxTallyPanel, type FluxTallyPanelStrings } from "./FluxTallyPanel.js";
 import { FreeSourceControlPanel } from "./FreeSourceControlPanel.js";
 import { FreeSourceOverlayNode } from "./FreeSourceOverlayNode.js";
+import { createFluxTallyProperty } from "./fluxTally.js";
 import { InterfaceBackgroundNode } from "./InterfaceBackgroundNode.js";
+import { LimitingCaseCalloutNode, type LimitingCaseCalloutStrings } from "./LimitingCaseCalloutNode.js";
 import { MagnitudeControlPanel } from "./MagnitudeControlPanel.js";
 import { MediaControlPanel } from "./MediaControlPanel.js";
 import { ToolsControlPanel } from "./ToolsControlPanel.js";
@@ -48,8 +55,22 @@ export type InterfaceScreenViewConfig = {
       preset2StringProperty: TReadOnlyProperty<string>;
       param1StringProperty: TReadOnlyProperty<string>;
       param2StringProperty: TReadOnlyProperty<string>;
+      paramHelpStringProperty: TReadOnlyProperty<string>;
       magnitudeStringProperty: TReadOnlyProperty<string>;
+      magnitudeHelpStringProperty: TReadOnlyProperty<string>;
+      magnitudeValueStringProperty: TReadOnlyProperty<string>;
       freeSourceStringProperty: TReadOnlyProperty<string>;
+      freeSourceHelpStringProperty: TReadOnlyProperty<string>;
+      freeSourceValueStringProperty: TReadOnlyProperty<string>;
+      toolsHeadingStringProperty: TReadOnlyProperty<string>;
+      fluxBoxStringProperty: TReadOnlyProperty<string>;
+      fluxBoxHeightStringProperty: TReadOnlyProperty<string>;
+    };
+    /** Announced when a component in medium 2 reverses direction. */
+    reversal: {
+      reversedProperty: TReadOnlyProperty<boolean>;
+      onStringProperty: TReadOnlyProperty<string>;
+      offStringProperty: TReadOnlyProperty<string>;
     };
   };
 
@@ -62,6 +83,9 @@ export type InterfaceScreenViewConfig = {
   freeSourceRange: Range;
   param1Property: Property<number>;
   param2Property: Property<number>;
+  parameterRange: Range;
+  presets: readonly MaterialPreset[];
+  presetLabels: ReadonlyMap<MaterialPresetId, TReadOnlyProperty<string>>;
   medium1PresetProperty: Property<MaterialPresetId>;
   medium2PresetProperty: Property<MaterialPresetId>;
   markCustom: (medium: 1 | 2) => void;
@@ -78,25 +102,32 @@ export type InterfaceScreenViewConfig = {
   magnitudeLabel: TReadOnlyProperty<string>;
   freeSourceTitle: TReadOnlyProperty<string>;
   freeSourceSymbol: TReadOnlyProperty<string>;
-  tanRatioLabel: TReadOnlyProperty<string>;
-  equationSourceFree: TReadOnlyProperty<string>;
-  equationWithFree: TReadOnlyProperty<string>;
+  angleReadout: AngleReadoutStrings;
+  equationStrip: EquationStripStrings;
+  limitingCase: LimitingCaseCalloutStrings;
+  fluxTally: FluxTallyPanelStrings;
+  /** Tools-panel labels that differ per screen. */
+  fluxBoxToolLabel: TReadOnlyProperty<string>;
+  boundSourceToolLabel: TReadOnlyProperty<string>;
 
-  boundPolarization?: {
+  /** Polarization P / magnetization M explanation layer (both screens). */
+  boundSource: {
     showProperty: BooleanProperty;
-    p1Property: TReadOnlyProperty<Vector2>;
-    p2Property: TReadOnlyProperty<Vector2>;
-    boundChargeProperty: TReadOnlyProperty<number>;
-    p1Label: TReadOnlyProperty<string>;
-    p2Label: TReadOnlyProperty<string>;
-    sigmaBLabel: TReadOnlyProperty<string>;
-    toolsLabel: TReadOnlyProperty<string>;
+    bound1Property: TReadOnlyProperty<Vector2>;
+    bound2Property: TReadOnlyProperty<Vector2>;
+    boundSourceProperty: TReadOnlyProperty<number>;
+    label1: TReadOnlyProperty<string>;
+    label2: TReadOnlyProperty<string>;
+    sourceLabel: TReadOnlyProperty<string>;
   };
 };
 
 export type InterfaceScreenViewOptions = ScreenViewOptions;
 
 export class InterfaceScreenView extends ScreenView {
+  private readonly protractorPositionProperty: Vector2Property;
+  private readonly protractor: ProtractorNode;
+
   public constructor(config: InterfaceScreenViewConfig, providedOptions?: InterfaceScreenViewOptions) {
     const options = optionize<InterfaceScreenViewOptions, EmptySelfOptions, ScreenViewOptions>()(
       {
@@ -114,14 +145,21 @@ export class InterfaceScreenView extends ScreenView {
     });
     this.addChild(backgroundRect);
 
-    const playRight = this.layoutBounds.maxX - PLAY_AREA_RIGHT_GUTTER;
+    // Built from the same PLAY_AREA_* constants that MODEL_HALF_HEIGHT is
+    // derived from, so the transform below is isotropic by construction rather
+    // than by coincidence. (These reduce to the old layoutBounds arithmetic:
+    // right edge = maxX − PLAY_AREA_RIGHT_GUTTER, bottom = maxY − margin.)
+    const playRight = SCREEN_VIEW_MARGIN + PLAY_AREA_WIDTH;
     const playBounds = new Bounds2(
       SCREEN_VIEW_MARGIN,
-      SCREEN_VIEW_MARGIN + 48,
+      SCREEN_VIEW_MARGIN + PLAY_AREA_TOP_INSET,
       playRight,
-      this.layoutBounds.maxY - SCREEN_VIEW_MARGIN,
+      SCREEN_VIEW_MARGIN + PLAY_AREA_TOP_INSET + PLAY_AREA_HEIGHT,
     );
 
+    // Isotropic by construction: the model rectangle has the same aspect ratio
+    // as playBounds, so px/unit is identical in x and y and drawn angles equal
+    // the angles the readout and protractor report.
     const modelViewTransform = ModelViewTransform2.createRectangleInvertedYMapping(
       new Bounds2(-MODEL_HALF_WIDTH, -MODEL_HALF_HEIGHT, MODEL_HALF_WIDTH, MODEL_HALF_HEIGHT),
       playBounds,
@@ -130,7 +168,7 @@ export class InterfaceScreenView extends ScreenView {
     const playLayer = new Node();
     this.addChild(playLayer);
 
-    playLayer.addChild(new InterfaceBackgroundNode(modelViewTransform, config.shared.showAnglesProperty));
+    playLayer.addChild(new InterfaceBackgroundNode(modelViewTransform, config.shared.showNormalProperty));
 
     playLayer.addChild(
       new FieldLinesNode(
@@ -160,23 +198,20 @@ export class InterfaceScreenView extends ScreenView {
       new FreeSourceOverlayNode(modelViewTransform, config.mode, config.freeSourceProperty, config.freeSourceRange.max),
     );
 
-    if (config.boundPolarization) {
-      const bp = config.boundPolarization;
-      playLayer.addChild(
-        new BoundPolarizationNode(
-          modelViewTransform,
-          bp.showProperty,
-          bp.p1Property,
-          bp.p2Property,
-          bp.boundChargeProperty,
-          config.primary1Property,
-          config.primary2Property,
-          bp.p1Label,
-          bp.p2Label,
-          bp.sigmaBLabel,
-        ),
-      );
-    }
+    playLayer.addChild(
+      new BoundSourceNode(modelViewTransform, {
+        mode: config.mode,
+        visibleProperty: config.boundSource.showProperty,
+        bound1Property: config.boundSource.bound1Property,
+        bound2Property: config.boundSource.bound2Property,
+        boundSourceProperty: config.boundSource.boundSourceProperty,
+        primary1Property: config.primary1Property,
+        primary2Property: config.primary2Property,
+        label1Property: config.boundSource.label1,
+        label2Property: config.boundSource.label2,
+        sourceLabelProperty: config.boundSource.sourceLabel,
+      }),
+    );
 
     const vectors = new BoundaryVectorsNode(modelViewTransform, {
       primaryProperty: config.primary1Property,
@@ -192,7 +227,25 @@ export class InterfaceScreenView extends ScreenView {
       dragAccessibleName: a11y.controls.dragPrimaryStringProperty,
       onPrimaryTip: config.onPrimaryTip,
     });
-    playLayer.addChild(vectors);
+    // Deliberately NOT added here: the vectors go into the scene after the
+    // medium panels, below, so the draggable tip stays on top of them.
+
+    // ── Gaussian pillbox / Amperian loop ──────────────────────────────────────
+    // Electric integrates D over the pillbox faces; magnetic integrates H along
+    // the loop legs.
+    const tallyProperty = createFluxTallyProperty(
+      config.mode,
+      config.mode === "electric" ? config.companion1Property : config.primary1Property,
+      config.mode === "electric" ? config.companion2Property : config.primary2Property,
+      config.freeSourceProperty,
+      config.shared.fluxBox.halfHeightProperty,
+      config.shared.fluxBox.width,
+    );
+    const fluxBoxNode = new FluxBoxNode(modelViewTransform, config.shared.fluxBox, tallyProperty, {
+      boxAccessibleName: a11y.controls.fluxBoxStringProperty,
+      heightAccessibleName: a11y.controls.fluxBoxHeightStringProperty,
+    });
+    playLayer.addChild(fluxBoxNode);
 
     const medium1Tag = new Text(ui.medium1StringProperty, {
       font: new PhetFont({ size: 14, weight: "bold" }),
@@ -209,61 +262,88 @@ export class InterfaceScreenView extends ScreenView {
     playLayer.addChild(medium1Tag);
     playLayer.addChild(medium2Tag);
 
-    const protractor = new ProtractorNode({
+    // ── Protractor ────────────────────────────────────────────────────────────
+    // Constrained so it cannot be lost under the control panels, and restored by
+    // Reset All (view.reset()).
+    this.protractor = new ProtractorNode({
       rotatable: true,
       scale: 0.55,
       cursor: "pointer",
       visibleProperty: config.shared.showProtractorProperty,
     });
-    protractor.center = modelViewTransform.modelToViewPosition(new Vector2(0, 0));
-    protractor.addInputListener(new RichDragListener({ translateNode: true }));
-    playLayer.addChild(protractor);
+    const protractorHome = modelViewTransform.modelToViewPosition(new Vector2(0, 0));
+    this.protractorPositionProperty = new Vector2Property(protractorHome);
+    this.protractorPositionProperty.link((position) => {
+      this.protractor.center = position;
+    });
+    // Without drag bounds the protractor can be pushed under the control panels
+    // or off the screen edge, with no way back.
+    const protractorDragBounds = playBounds.erodedXY(
+      Math.min(this.protractor.width / 2, playBounds.width / 3),
+      Math.min(this.protractor.height / 2, playBounds.height / 3),
+    );
+    this.protractor.addInputListener(
+      new RichDragListener({
+        positionProperty: this.protractorPositionProperty,
+        dragBoundsProperty: new Property<Bounds2 | null>(protractorDragBounds),
+      }),
+    );
+    playLayer.addChild(this.protractor);
 
     const angleReadout = new AngleReadoutNode(
       config.shared.showAnglesProperty,
       config.primary1Property,
       config.primary2Property,
-      config.tanRatioLabel,
       createParameterRatioProperty(config.param1Property, config.param2Property),
+      config.freeSourceProperty,
+      config.angleReadout,
     );
     angleReadout.left = playBounds.minX + 8;
     angleReadout.top = playBounds.minY + 36;
     playLayer.addChild(angleReadout);
 
+    const limitingCallout = new LimitingCaseCalloutNode(
+      new Vector2(playBounds.centerX, modelViewTransform.modelToViewY(0) - 92),
+      config.param1Property,
+      config.param2Property,
+      config.limitingCase,
+    );
+    playLayer.addChild(limitingCallout);
+
     const equationStrip = new EquationStripNode(
       config.mode,
       config.shared.showComponentsProperty,
-      config.equationSourceFree,
-      config.equationWithFree,
       config.freeSourceProperty,
+      config.equationStrip,
     );
     equationStrip.centerX = playBounds.centerX;
     equationStrip.top = SCREEN_VIEW_MARGIN;
     this.addChild(equationStrip);
+
+    const fluxTallyPanel = new FluxTallyPanel(tallyProperty, config.shared.fluxBox.showProperty, config.fluxTally);
+    fluxTallyPanel.left = playBounds.minX + 8;
+    fluxTallyPanel.bottom = medium2Tag.top - 8;
+    this.addChild(fluxTallyPanel);
 
     const listParent = new Node();
     this.addChild(listParent);
 
     // Medium panels live inside their respective media (upper-right / lower-right
     // of the play area), so the right-hand column keeps room for the other controls.
-    const mediaStringsBase = {
-      parameter: config.parameterLabel,
-      vacuum: ui.vacuumStringProperty,
-      water: ui.waterStringProperty,
-      glass: ui.glassStringProperty,
-      highK: ui.highKStringProperty,
-      custom: ui.customStringProperty,
-    };
-
     const medium1Panel = new MediaControlPanel(
       config.param1Property,
+      config.parameterRange,
+      config.presets,
       config.medium1PresetProperty,
       () => config.markCustom(1),
       {
-        ...mediaStringsBase,
         title: ui.medium1StringProperty,
+        parameter: config.parameterLabel,
+        custom: ui.customStringProperty,
+        presetLabels: config.presetLabels,
         accessibleName: a11y.controls.preset1StringProperty,
         sliderAccessibleName: a11y.controls.param1StringProperty,
+        sliderHelpText: a11y.controls.paramHelpStringProperty,
       },
       listParent,
       { fill: FieldBoundaryColors.translucentPanelBackgroundColorProperty },
@@ -274,13 +354,18 @@ export class InterfaceScreenView extends ScreenView {
 
     const medium2Panel = new MediaControlPanel(
       config.param2Property,
+      config.parameterRange,
+      config.presets,
       config.medium2PresetProperty,
       () => config.markCustom(2),
       {
-        ...mediaStringsBase,
         title: ui.medium2StringProperty,
+        parameter: config.parameterLabel,
+        custom: ui.customStringProperty,
+        presetLabels: config.presetLabels,
         accessibleName: a11y.controls.preset2StringProperty,
         sliderAccessibleName: a11y.controls.param2StringProperty,
+        sliderHelpText: a11y.controls.paramHelpStringProperty,
       },
       listParent,
       { fill: FieldBoundaryColors.translucentPanelBackgroundColorProperty },
@@ -289,11 +374,19 @@ export class InterfaceScreenView extends ScreenView {
     medium2Panel.bottom = playBounds.maxY - 8;
     this.addChild(medium2Panel);
 
+    // Above the medium panels: at large magnitude the field tip reaches into the
+    // upper-right of the play area, and a knob under a panel cannot be grabbed.
+    // Everything in this node except the knob is non-pickable, so the panels
+    // underneath keep their own clicks.
+    this.addChild(vectors);
+
     const controlsLeft = playRight + 12;
     const magnitudePanel = new MagnitudeControlPanel(
       config.primaryMagnitudeProperty,
       config.magnitudeLabel,
       a11y.controls.magnitudeStringProperty,
+      a11y.controls.magnitudeHelpStringProperty,
+      a11y.controls.magnitudeValueStringProperty,
     );
     magnitudePanel.left = controlsLeft;
     magnitudePanel.top = SCREEN_VIEW_MARGIN;
@@ -305,23 +398,42 @@ export class InterfaceScreenView extends ScreenView {
       config.freeSourceTitle,
       config.freeSourceSymbol,
       a11y.controls.freeSourceStringProperty,
+      a11y.controls.freeSourceHelpStringProperty,
+      a11y.controls.freeSourceValueStringProperty,
     );
     freeSourcePanel.left = controlsLeft;
     freeSourcePanel.top = magnitudePanel.bottom + 10;
     this.addChild(freeSourcePanel);
 
-    const toolsStrings = {
-      title: ui.toolsStringProperty,
-      components: ui.componentsStringProperty,
-      fieldLines: ui.fieldLinesStringProperty,
-      protractor: ui.protractorStringProperty,
-      angles: ui.anglesStringProperty,
-      ...(config.boundPolarization ? { boundCharge: config.boundPolarization.toolsLabel } : {}),
-    };
-    const toolsPanel = new ToolsControlPanel(config.shared, toolsStrings, config.boundPolarization?.showProperty);
+    const toolsPanel = new ToolsControlPanel(
+      config.shared,
+      {
+        title: ui.toolsStringProperty,
+        components: ui.componentsStringProperty,
+        fieldLines: ui.fieldLinesStringProperty,
+        protractor: ui.protractorStringProperty,
+        angles: ui.anglesStringProperty,
+        surfaceNormal: ui.surfaceNormalStringProperty,
+        fluxBox: config.fluxBoxToolLabel,
+        boundSource: config.boundSourceToolLabel,
+      },
+      config.boundSource.showProperty,
+      a11y.controls.toolsHeadingStringProperty,
+    );
     toolsPanel.left = controlsLeft;
     toolsPanel.top = freeSourcePanel.bottom + 10;
     this.addChild(toolsPanel);
+
+    // The unit convention is otherwise only in doc/model.md, which students do
+    // not read; every slider and readout would be a bare number.
+    const unitsNote = new Text(ui.unitsNoteStringProperty, {
+      font: new PhetFont(11),
+      fill: FieldBoundaryColors.freeComponentColorProperty,
+      maxWidth: PLAY_AREA_RIGHT_GUTTER - 32,
+    });
+    unitsNote.left = controlsLeft;
+    unitsNote.top = toolsPanel.bottom + 10;
+    this.addChild(unitsNote);
 
     // Combo lists above panels
     listParent.moveToFront();
@@ -337,10 +449,19 @@ export class InterfaceScreenView extends ScreenView {
     });
     this.addChild(resetAllButton);
 
+    // A component in medium 2 flipping direction is a striking, teachable
+    // moment that would otherwise pass in silence for description users.
+    a11y.reversal.reversedProperty.lazyLink((reversed) => {
+      this.addAccessibleResponse(
+        reversed ? a11y.reversal.onStringProperty.value : a11y.reversal.offStringProperty.value,
+      );
+    });
+
     this.addChild(
       new Node({
         pdomOrder: [
           vectors.dragHandle,
+          ...fluxBoxNode.focusTargets,
           medium1Panel,
           medium2Panel,
           magnitudePanel,
@@ -353,6 +474,9 @@ export class InterfaceScreenView extends ScreenView {
   }
 
   public reset(): void {
-    // View has no independent mutable state beyond model-driven Properties.
+    // Reset All must be able to recover the protractor: it is draggable and
+    // rotatable, and both are view-only state.
+    this.protractorPositionProperty.reset();
+    this.protractor.reset();
   }
 }

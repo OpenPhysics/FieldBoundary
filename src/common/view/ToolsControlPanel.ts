@@ -1,8 +1,12 @@
 /**
  * ToolsControlPanel.ts
  *
- * Checkboxes for components, field lines, protractor, and angle readouts.
- * Optional Electric-only "bound charge" toggle when label + Property are provided.
+ * Checkboxes for the play-area tools. "Angles" and "Surface normal" are
+ * separate toggles: the normal is the reference line a student needs *while*
+ * measuring with the protractor, so hiding the θ readouts must not remove it.
+ *
+ * The bound-source toggle (P/σ_b on Electric, M/K_b on Magnetic) is optional
+ * only in the sense that its label differs per screen.
  */
 import type { BooleanProperty, TReadOnlyProperty } from "scenerystack/axon";
 import { Text, VBox } from "scenerystack/scenery";
@@ -18,15 +22,19 @@ export type ToolsControlPanelStrings = {
   fieldLines: TReadOnlyProperty<string>;
   protractor: TReadOnlyProperty<string>;
   angles: TReadOnlyProperty<string>;
-  /** Electric-only; omit on Magnetic. */
-  boundCharge?: TReadOnlyProperty<string>;
+  surfaceNormal: TReadOnlyProperty<string>;
+  /** "Gaussian pillbox" (Electric) / "Amperian loop" (Magnetic). */
+  fluxBox: TReadOnlyProperty<string>;
+  /** "Bound charge (P, σ_b)" / "Magnetization (M, K_b)". */
+  boundSource: TReadOnlyProperty<string>;
 };
 
 export class ToolsControlPanel extends FieldBoundaryPanel {
   public constructor(
     shared: SharedModel,
     strings: ToolsControlPanelStrings,
-    showBoundChargeProperty?: BooleanProperty,
+    showBoundSourceProperty: BooleanProperty,
+    accessibleHeading: TReadOnlyProperty<string>,
   ) {
     const title = new Text(strings.title, {
       font: new PhetFont({ size: 15, weight: "bold" }),
@@ -39,28 +47,24 @@ export class ToolsControlPanel extends FieldBoundaryPanel {
         fill: FieldBoundaryColors.textColorProperty,
       });
 
-    const items = [
-      { property: shared.showComponentsProperty, createNode: () => label(strings.components) },
-      { property: shared.showFieldLinesProperty, createNode: () => label(strings.fieldLines) },
-      { property: shared.showProtractorProperty, createNode: () => label(strings.protractor) },
-      { property: shared.showAnglesProperty, createNode: () => label(strings.angles) },
-    ];
-
-    if (strings.boundCharge && showBoundChargeProperty) {
-      const boundChargeLabel = strings.boundCharge;
-      items.push({
-        property: showBoundChargeProperty,
-        createNode: () => label(boundChargeLabel),
-      });
-    }
-
-    const group = new VerticalCheckboxGroup(items, {
-      spacing: 8,
-      checkboxOptions: {
-        checkboxColor: FieldBoundaryColors.controlSurfaceTextColorProperty,
-        checkboxColorBackground: FieldBoundaryColors.controlSurfaceColorProperty,
+    const group = new VerticalCheckboxGroup(
+      [
+        { property: shared.showComponentsProperty, createNode: () => label(strings.components) },
+        { property: shared.showFieldLinesProperty, createNode: () => label(strings.fieldLines) },
+        { property: shared.showProtractorProperty, createNode: () => label(strings.protractor) },
+        { property: shared.showAnglesProperty, createNode: () => label(strings.angles) },
+        { property: shared.showNormalProperty, createNode: () => label(strings.surfaceNormal) },
+        { property: shared.fluxBox.showProperty, createNode: () => label(strings.fluxBox) },
+        { property: showBoundSourceProperty, createNode: () => label(strings.boundSource) },
+      ],
+      {
+        spacing: 8,
+        checkboxOptions: {
+          checkboxColor: FieldBoundaryColors.controlSurfaceTextColorProperty,
+          checkboxColorBackground: FieldBoundaryColors.controlSurfaceColorProperty,
+        },
       },
-    });
+    );
 
     super(
       new VBox({
@@ -68,6 +72,7 @@ export class ToolsControlPanel extends FieldBoundaryPanel {
         align: "left",
         children: [title, group],
       }),
+      { accessibleHeading },
     );
   }
 }

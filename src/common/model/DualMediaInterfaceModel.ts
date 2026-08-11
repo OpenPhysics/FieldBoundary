@@ -5,14 +5,10 @@
  * parameters, free-source Property, primary angle/magnitude, presets, and tip drag.
  * Subclasses own public aliases (e1/h1, …) and implement refraction writeback.
  */
-import { Multilink, NumberProperty, type Property, StringProperty } from "scenerystack/axon";
+import { Multilink, NumberProperty, type Property, StringProperty, type UnknownMultilink } from "scenerystack/axon";
 import { type Range, Vector2, Vector2Property } from "scenerystack/dot";
 import type { TModel } from "scenerystack/joist";
-import {
-  DEFAULT_FIELD_ANGLE,
-  DEFAULT_FIELD_MAGNITUDE,
-  RELATIVE_PARAMETER_RANGE,
-} from "../../FieldBoundaryConstants.js";
+import { DEFAULT_FIELD_ANGLE, DEFAULT_FIELD_MAGNITUDE } from "../../FieldBoundaryConstants.js";
 import { angleFromNormal, clampAngle, fieldFromPolar } from "./interfaceFields.js";
 import { type MaterialPreset, type MaterialPresetId, presetById } from "./MaterialPresets.js";
 import { SharedModel } from "./SharedModel.js";
@@ -20,11 +16,14 @@ import { SharedModel } from "./SharedModel.js";
 export type DualMediaInterfaceModelConfig = {
   defaultParam1: number;
   defaultParam2: number;
+  defaultMedium1Preset: MaterialPresetId;
   defaultMedium2Preset: MaterialPresetId;
+  /** εᵣ presets on Electric, μᵣ presets on Magnetic. */
+  presets: readonly MaterialPreset[];
+  /** εᵣ range on Electric, μᵣ range on Magnetic. */
+  parameterRange: Range;
   freeSourceDefault: number;
   freeSourceRange: Range;
-  /** Map a named preset to εᵣ or μᵣ. */
-  presetParameter: (preset: MaterialPreset) => number;
 };
 
 export abstract class DualMediaInterfaceModel implements TModel {
@@ -33,8 +32,10 @@ export abstract class DualMediaInterfaceModel implements TModel {
   public readonly param1Property: NumberProperty;
   public readonly param2Property: NumberProperty;
   public readonly freeSourceProperty: NumberProperty;
+  public readonly parameterRange: Range;
+  public readonly presets: readonly MaterialPreset[];
 
-  public readonly medium1PresetProperty = new StringProperty("vacuum") as Property<MaterialPresetId>;
+  public readonly medium1PresetProperty: Property<MaterialPresetId>;
   public readonly medium2PresetProperty: Property<MaterialPresetId>;
 
   public readonly primaryAngleProperty = new NumberProperty(DEFAULT_FIELD_ANGLE);
@@ -46,20 +47,18 @@ export abstract class DualMediaInterfaceModel implements TModel {
   public readonly companion2Property = new Vector2Property(new Vector2(0, 0));
 
   private applyingPreset = false;
-  private readonly presetParameter: (preset: MaterialPreset) => number;
+  private fieldMultilink: UnknownMultilink | null = null;
 
   protected constructor(config: DualMediaInterfaceModelConfig) {
-    this.param1Property = new NumberProperty(config.defaultParam1, {
-      range: RELATIVE_PARAMETER_RANGE,
-    });
-    this.param2Property = new NumberProperty(config.defaultParam2, {
-      range: RELATIVE_PARAMETER_RANGE,
-    });
+    this.parameterRange = config.parameterRange;
+    this.presets = config.presets;
+    this.param1Property = new NumberProperty(config.defaultParam1, { range: config.parameterRange });
+    this.param2Property = new NumberProperty(config.defaultParam2, { range: config.parameterRange });
     this.freeSourceProperty = new NumberProperty(config.freeSourceDefault, {
       range: config.freeSourceRange,
     });
+    this.medium1PresetProperty = new StringProperty(config.defaultMedium1Preset) as Property<MaterialPresetId>;
     this.medium2PresetProperty = new StringProperty(config.defaultMedium2Preset) as Property<MaterialPresetId>;
-    this.presetParameter = config.presetParameter;
 
     this.medium1PresetProperty.link((id) => this.applyPreset(1, id));
     this.medium2PresetProperty.link((id) => this.applyPreset(2, id));
@@ -70,7 +69,7 @@ export abstract class DualMediaInterfaceModel implements TModel {
    * any extra Properties (e.g. polarization) used by applyRefraction exist.
    */
   protected connectFieldMultilink(): void {
-    Multilink.multilink(
+    this.fieldMultilink = Multilink.multilink(
       [
         this.primaryAngleProperty,
         this.primaryMagnitudeProperty,
@@ -110,11 +109,11 @@ export abstract class DualMediaInterfaceModel implements TModel {
     if (id === "custom") {
       return;
     }
-    const preset = presetById(id);
+    const preset = presetById(this.presets, id);
     if (!preset) {
       return;
     }
-    const value = Math.min(RELATIVE_PARAMETER_RANGE.max, this.presetParameter(preset));
+    const value = this.parameterRange.constrainValue(preset.value);
     this.applyingPreset = true;
     if (medium === 1) {
       this.param1Property.value = value;
@@ -145,6 +144,28 @@ export abstract class DualMediaInterfaceModel implements TModel {
     this.medium2PresetProperty.reset();
     this.primaryAngleProperty.reset();
     this.primaryMagnitudeProperty.reset();
+  }
+
+  /**
+   * Release every AXON listener this model owns. Exercised by the memory-leak
+   * suite: the field Multilink is registered on the parameter Properties, so
+   * without disposing it the whole model stays reachable.
+   */
+  public dispose(): void {
+    this.fieldMultilink?.dispose();
+    this.fieldMultilink = null;
+    this.shared.dispose();
+    this.param1Property.dispose();
+    this.param2Property.dispose();
+    this.freeSourceProperty.dispose();
+    this.medium1PresetProperty.dispose();
+    this.medium2PresetProperty.dispose();
+    this.primaryAngleProperty.dispose();
+    this.primaryMagnitudeProperty.dispose();
+    this.primary1Property.dispose();
+    this.primary2Property.dispose();
+    this.companion1Property.dispose();
+    this.companion2Property.dispose();
   }
 
   public step(_dt: number): void {

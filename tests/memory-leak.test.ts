@@ -5,10 +5,15 @@
  * garbage collection via global.gc (--expose-gc in vitest.config.ts), then asserts via
  * WeakRef that the object was collected. V8 requires a function boundary (not merely
  * a block scope) so local strong references die when the helper returns.
+ *
+ * This points at the sim's own models rather than a template placeholder: the
+ * screen models register a Multilink on their parameter Properties, so a model
+ * that fails to dispose that link stays reachable forever.
  */
 
 import { describe, expect, it } from "vitest";
-import { TimeModel } from "../src/common/TimeModel.js";
+import { ElectricModel } from "../src/electric/model/ElectricModel.js";
+import { MagneticModel } from "../src/magnetic/model/MagneticModel.js";
 
 /**
  * Force garbage collection with multiple passes. When `earlyExitRefs` is supplied
@@ -31,8 +36,19 @@ async function forceGC(earlyExitRefs?: WeakRef<object> | readonly WeakRef<object
   }
 }
 
-function createAndDisposeTimeModel(): WeakRef<object> {
-  const model = new TimeModel();
+function createAndDisposeElectricModel(): WeakRef<object> {
+  const model = new ElectricModel();
+  // Exercise the field multilink so the dependency graph is fully wired.
+  model.setE1FromTip(model.e1Property.value);
+  model.eps2Property.value = 12;
+  const ref = new WeakRef<object>(model);
+  model.dispose();
+  return ref;
+}
+
+function createAndDisposeMagneticModel(): WeakRef<object> {
+  const model = new MagneticModel();
+  model.surfaceCurrentProperty.value = 1;
   const ref = new WeakRef<object>(model);
   model.dispose();
   return ref;
@@ -49,22 +65,23 @@ describe("Memory leak regression", () => {
     expect(ref.deref()).toBeUndefined();
   });
 
-  it("TimeModel is collected after dispose", async () => {
-    const ref = createAndDisposeTimeModel();
+  it("ElectricModel is collected after dispose", async () => {
+    const ref = createAndDisposeElectricModel();
     await forceGC(ref);
     expect(ref.deref()).toBeUndefined();
   });
 
-  it("double dispose() does not throw", () => {
-    const model = new TimeModel();
-    model.dispose();
-    expect(() => model.dispose()).not.toThrow();
+  it("MagneticModel is collected after dispose", async () => {
+    const ref = createAndDisposeMagneticModel();
+    await forceGC(ref);
+    expect(ref.deref()).toBeUndefined();
   });
 
   it("repeated create/dispose cycles leave no survivors", async () => {
     const refs: WeakRef<object>[] = [];
     for (let i = 0; i < 10; i++) {
-      refs.push(createAndDisposeTimeModel());
+      refs.push(createAndDisposeElectricModel());
+      refs.push(createAndDisposeMagneticModel());
     }
     await forceGC(refs);
     const survivors = refs.filter((r) => r.deref() !== undefined).length;

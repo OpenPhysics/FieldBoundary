@@ -62,6 +62,43 @@ B_{1n}=B_{2n}\;\;\Rightarrow\;\;H_{2n}=\frac{\mu_1}{\mu_2}H_{1n},\qquad
 With \(K_f=0\): \(H_{1t}=H_{2t}\). Positive \(K_f\) (⊙, out of page) increases
 \(H_{2t}\); negative \(K_f\) (⊗, into page) decreases it.
 
+Magnetization \(\vec{M}_i=(\mu_i-1)\vec{H}_i\) leaves a bound surface current
+(scalar along \(+\hat z\))
+
+\[
+K_b=M_{2t}-M_{1t},
+\]
+
+so \(B_{2t}-B_{1t}=K_f+K_b\): the tangential \(B\) jump is the *total* surface
+current, exactly as the normal \(E\) jump is the total surface charge. This is the
+dual of \(\sigma_b=P_{1n}-P_{2n}\). Air (\(\mu=1\)) has \(\vec{M}=0\); equal
+media with \(K_f=0\) have \(K_b=0\).
+
+## Integral laws (pillbox / loop)
+
+The boundary conditions follow from the integral laws applied to a region
+straddling the interface, of width \(w\) and half-height \(h\).
+
+Gaussian pillbox, \(\oint\vec{D}\cdot d\vec{A}=Q_{f,\mathrm{enc}}\):
+
+\[
+\underbrace{D_{1n}w}_{\text{top}}\;\underbrace{-\,D_{2n}w}_{\text{bottom}}\;
++\;\underbrace{(D_{1t}+D_{2t})h-(D_{1t}+D_{2t})h}_{\text{sides}}=\sigma_f w .
+\]
+
+Amperian loop (counterclockwise, \(\hat z\) out of page),
+\(\oint\vec{H}\cdot d\vec{l}=I_{f,\mathrm{enc}}\):
+
+\[
+\underbrace{H_{2t}w}_{\text{bottom}}\;\underbrace{-\,H_{1t}w}_{\text{top}}\;
++\;\underbrace{(H_{1n}+H_{2n})h-(H_{1n}+H_{2n})h}_{\text{sides}}=K_f w .
+\]
+
+For uniform fields the two side terms are equal and opposite, so they cancel
+exactly; each is individually proportional to \(h\) and vanishes as the region
+collapses onto the interface. Dividing by \(w\) recovers
+\(D_{1n}-D_{2n}=\sigma_f\) and \(H_{2t}-H_{1t}=K_f\).
+
 ## Display
 
 Fields are continuous across the boundary: a medium-2 physics vector
@@ -74,8 +111,13 @@ Companion \(\vec{D}\) or \(\vec{B}\) arrows are auto-scaled relative to the
 primary so large \(\varepsilon_r\)/\(\mu_r\) stay on-screen. Component-axis
 overlays still reflect medium-2 magnitudes into the lower half-plane via
 `medium2DisplayVector` to compare \(|E_n|\)/\(|D_n|\) across the interface.
+The companion scale factor is shown next to the \(\vec{D}\)/\(\vec{B}\) label
+(e.g. ×0.46) so the drawn lengths are not read as true relative magnitudes.
+The model-view transform is isotropic — \(2\,\mathrm{MODEL\_HALF\_HEIGHT}\) is
+derived from the play-area aspect ratio — so drawn angles equal the angles the
+\(\theta\) readout and the protractor report.
 Free surface sources are drawn on the interface: \(+\)/\(-\) markers for
-\(\sigma_f\), and ⊙/⊗ markers for \(K_f\) (out of / into the page). On the
-Electric screen, an optional bound-charge layer shows \(\vec{P}\) arrows and
-hollow \(\sigma_b\) glyphs (offset from free-charge markers) explaining why
-\(E_n\) jumps when \(\varepsilon\) differs.
+\(\sigma_f\), and ⊙/⊗ markers for \(K_f\) (out of / into the page). Each screen
+has an optional bound-source layer drawn with hollow dashed glyphs offset from
+the free markers: \(\vec{P}\) and \(\sigma_b\) on Electric (why \(E_n\) jumps),
+\(\vec{M}\) and \(K_b\) on Magnetic (why \(B_t\) jumps).

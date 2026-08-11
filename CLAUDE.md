@@ -12,6 +12,7 @@ relative permittivity / permeability to see which components stay continuous.
 UI borrows a two-media layout, material presets, protractor, and field-line
 toggle from that style of sim, but the physics is interface BCs.
 
+Learning goals: `doc/learning-goals.md` — read this before adding features.
 Physics notes: `doc/model.md`. Architecture: `doc/implementation-notes.md`.
 
 ## Screens
@@ -32,7 +33,9 @@ Physics notes: `doc/model.md`. Architecture: `doc/implementation-notes.md`.
 | Screen factory | `src/common/createFieldBoundaryScreen.ts` |
 | Electric model / view | `src/electric/model/ElectricModel.ts`, `src/electric/view/ElectricScreenView.ts` |
 | Magnetic model / view | `src/magnetic/model/MagneticModel.ts`, `src/magnetic/view/MagneticScreenView.ts` |
-| Play-area nodes | `src/common/view/` (`InterfaceBackgroundNode`, `BoundaryVectorsNode`, `ComponentOverlayNode`, `FieldLinesNode`, `FreeSourceOverlayNode`, `BoundPolarizationNode`, `FreeSourceControlPanel`, …) |
+| Pillbox / loop tool | `src/common/model/FluxBoxModel.ts`, `src/common/view/FluxBoxNode.ts`, `FluxTallyPanel.ts`, `fluxTally.ts` |
+| Play-area nodes | `src/common/view/` (`InterfaceBackgroundNode`, `BoundaryVectorsNode`, `ComponentOverlayNode`, `FieldLinesNode`, `FreeSourceOverlayNode`, `BoundSourceNode`, `LimitingCaseCalloutNode`, `FreeSourceControlPanel`, …) |
+| Shared helpers | `displayScale.ts` (secondary-arrow scaling + badge), `interfaceMarkers.ts` (charge / current glyphs), `currentDetails.ts` (live a11y description) |
 | Colors / strings | `FieldBoundaryColors.ts`, `src/i18n/StringManager.ts` |
 
 ## Model conventions
@@ -42,7 +45,12 @@ Physics notes: `doc/model.md`. Architecture: `doc/implementation-notes.md`.
 - Angle \(\theta\) of the primary field is from the normal: \(\tan\theta=E_t/E_n\).
 - Medium-2 fields are continuous with medium 1 (point toward \(+\hat{n}\)); drawn in the lower half-plane by anchoring the arrow tip at the interface and the tail at \((-E_t,-E_n)\). For equal media the two arrows are parallel. `medium2DisplayVector` is used only by component-axis overlays.
 - Free surface charge \(\sigma_f\) (Electric) and free surface current \(K_f\) (Magnetic, along \(+\hat{z}\)) are adjustable on the interface and default to 0. With \(\sigma_f\ne 0\): \(D_{1n}-D_{2n}=\sigma_f\) (Dₙ discontinuous). With \(K_f\ne 0\): \(H_{2t}-H_{1t}=K_f\) (Hₜ discontinuous). The equation strip and component-overlay highlighting switch to reflect the sourced BC.
-- Bound charge (Electric, toggle): \(\vec{P}=(\varepsilon_r-1)\vec{E}\), \(\sigma_b=P_{1n}-P_{2n}\). Explains \(E_{1n}-E_{2n}=\sigma_f-\sigma_b\). Hollow glyphs + \(\vec{P}\) arrows via `BoundPolarizationNode`.
+- Bound sources (toggle on each screen, default off) via `BoundSourceNode`, hollow dashed glyphs offset from the free markers:
+  - Electric: \(\vec{P}=(\varepsilon_r-1)\vec{E}\), \(\sigma_b=P_{1n}-P_{2n}\); explains \(E_{1n}-E_{2n}=\sigma_f-\sigma_b\).
+  - Magnetic (dual): \(\vec{M}=(\mu_r-1)\vec{H}\), \(K_b=M_{2t}-M_{1t}\); explains \(B_{2t}-B_{1t}=K_f+K_b\).
+- The model-view transform must stay **isotropic**: `MODEL_HALF_HEIGHT` is derived from the play-area aspect ratio, never hard-coded. Anisotropy makes drawn angles disagree with the \(\theta\) readout and the protractor (guarded by `tests/common/view/transform.test.ts`).
+- \(\varepsilon_r\) / \(\mu_r\) sliders are logarithmic with per-screen ranges and per-screen presets (`ELECTRIC_PRESETS` / `MAGNETIC_PRESETS`); D/B and P/M arrows are scaled to fit and show the factor as a `×0.46` badge.
+- Gaussian pillbox (Electric) / Amperian loop (Magnetic): draggable along the interface and collapsible in height, with a live per-face tally. Collapsing it turns \(\oint\vec{D}\cdot d\vec{A}=Q_{f,\mathrm{enc}}\) into the boundary condition in front of the student.
 
 ### Boundary conditions
 
@@ -60,6 +68,8 @@ Bᵢ = μᵢ Hᵢ
 
 Follows [Baton/ACCESSIBILITY.md](https://github.com/OpenPhysics/Baton/blob/main/ACCESSIBILITY.md).
 Screen summaries live in `*ScreenSummaryContent.ts`; a11y strings under `a11y` in locale JSON.
+The "current details" region is a live `DerivedProperty` built in `currentDetails.ts` —
+keep it dynamic, or a non-visual student hears nothing about the fields themselves.
 
 ## Commands
 
@@ -71,3 +81,7 @@ npm test
 ## Non-goals (v1)
 
 Optical rays / Fresnel / TIR; curved interfaces; time-harmonic waves.
+
+Not yet built: a **Predict mode** (hide the medium-2 arrows, let the student place a
+ghost vector, reveal with component-wise feedback). Nothing in the UI currently asks
+the student to commit to a prediction — see `doc/learning-goals.md`.

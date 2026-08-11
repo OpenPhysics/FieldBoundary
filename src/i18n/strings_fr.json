@@ -10,16 +10,25 @@
     "epsr": "εᵣ",
     "mur": "μᵣ",
     "vacuum": "Vide",
-    "water": "Eau",
     "glass": "Verre",
-    "highK": "Fort κ / μ",
+    "water": "Eau",
+    "conductorLike": "Quasi-conducteur",
+    "air": "Air",
+    "ferrite": "Ferrite",
+    "iron": "Fer",
+    "muMetal": "Mu-métal",
     "custom": "Personnalisé",
     "tools": "Outils",
     "components": "Afficher les composantes",
     "fieldLines": "Lignes de champ",
     "protractor": "Rapporteur",
     "angles": "Angles",
+    "surfaceNormal": "Normale à la surface",
+    "pillbox": "Boîte de Gauss",
+    "amperianLoop": "Boucle d'Ampère",
     "boundCharge": "Charge liée (P, σ_b)",
+    "magnetization": "Aimantation (M, K_b)",
+    "unitsNote": "Unités de simulation : ε₀ = μ₀ = 1. Les champs, σ_f et K_f sont en unités arbitraires ; εᵣ et μᵣ sont sans dimension.",
     "magnitudeE": "Magnitude de E₁",
     "magnitudeH": "Magnitude de H₁",
     "surfaceChargeTitle": "Charge superficielle",
@@ -27,10 +36,7 @@
     "sigmaF": "σ_f",
     "sigmaB": "σ_b",
     "kF": "K_f",
-    "equationElectric": "Conditions aux limites E (σ_f = 0)",
-    "equationMagnetic": "Conditions aux limites M (K_f = 0)",
-    "equationElectricFree": "Conditions aux limites E (σ_f ≠ 0)",
-    "equationMagneticFree": "Conditions aux limites M (K_f ≠ 0)",
+    "kB": "K_b",
     "labelE1": "E₁",
     "labelE2": "E₂",
     "labelD1": "D₁",
@@ -41,47 +47,140 @@
     "labelH2": "H₂",
     "labelB1": "B₁",
     "labelB2": "B₂",
-    "tanRatioElectric": "tanθ₂/tanθ₁",
-    "tanRatioMagnetic": "tanθ₂/tanθ₁"
+    "labelM1": "M₁",
+    "labelM2": "M₂",
+    "tanRatio": "tanθ₂/tanθ₁",
+    "predictedElectric": "prévu ε₂/ε₁ = {{value}}",
+    "predictedMagnetic": "prévu μ₂/μ₁ = {{value}}",
+    "ratioSourcedElectric": "ce rapport n'est pas ε₂/ε₁ tant que σ_f ≠ 0",
+    "ratioSourcedMagnetic": "ce rapport n'est pas μ₂/μ₁ tant que K_f ≠ 0",
+    "equations": {
+      "electricTitle": "Conditions aux limites E (σ_f = 0)",
+      "electricTitleSourced": "Conditions aux limites E (σ_f ≠ 0)",
+      "magneticTitle": "Conditions aux limites M (K_f = 0)",
+      "magneticTitleSourced": "Conditions aux limites M (K_f ≠ 0)",
+      "eTangential": "E₁ₜ = E₂ₜ",
+      "dNormal": "D₁ₙ = D₂ₙ",
+      "dNormalJump": "D₁ₙ − D₂ₙ = σ_f",
+      "eNormal": "E₁ₙ ≠ E₂ₙ",
+      "dTangential": "D₁ₜ ≠ D₂ₜ",
+      "hTangential": "H₁ₜ = H₂ₜ",
+      "hTangentialJump": "H₂ₜ − H₁ₜ = K_f",
+      "bNormal": "B₁ₙ = B₂ₙ",
+      "hNormal": "H₁ₙ ≠ H₂ₙ",
+      "bTangential": "B₁ₜ ≠ B₂ₜ",
+      "duality": "Dualité avec l'autre écran :  Eₜ ↔ Hₜ,  Dₙ ↔ Bₙ,  σ_f ↔ K_f,  P ↔ M"
+    },
+    "flux": {
+      "electricTitle": "∮ D·dA sur la boîte",
+      "magneticTitle": "∮ H·dl sur la boucle",
+      "electricTop": "Face du haut (D₁ₙ w)",
+      "electricBottom": "Face du bas (−D₂ₙ w)",
+      "magneticTop": "Côté du haut (−H₁ₜ w)",
+      "magneticBottom": "Côté du bas (H₂ₜ w)",
+      "sides": "Côtés latéraux (s'annulent)",
+      "electricTotal": "Total ∮ D·dA",
+      "magneticTotal": "Total ∮ H·dl",
+      "electricEnclosed": "Q_f enfermée (σ_f w)",
+      "magneticEnclosed": "I_f enfermé (K_f w)",
+      "electricHint": "Aplatissez la boîte avec la poignée : les termes latéraux → 0, il reste D₁ₙ − D₂ₙ = σ_f.",
+      "magneticHint": "Aplatissez la boucle avec la poignée : les termes latéraux → 0, il reste H₂ₜ − H₁ₜ = K_f."
+    },
+    "callout": {
+      "electricMedium2": "εᵣ₂ ≫ εᵣ₁ — E₂ bascule presque parallèlement à l'interface : E₂ₙ → 0 alors que E₂ₜ = E₁ₜ reste inchangée.",
+      "electricMedium1": "εᵣ₁ ≫ εᵣ₂ — E₂ bascule presque normalement à l'interface : E₂ₙ est amplifiée alors que E₂ₜ = E₁ₜ reste inchangée.",
+      "electricMatched": "Milieux identiques (εᵣ₁ = εᵣ₂) — aucun coude : la ligne de champ traverse tout droit.",
+      "magneticMedium2": "μᵣ₂ ≫ μᵣ₁ — canalisation du flux : B₂ bascule presque parallèlement à l'interface et est guidé le long du milieu 2. C'est le principe du blindage magnétique.",
+      "magneticMedium1": "μᵣ₁ ≫ μᵣ₂ — B₂ bascule presque normalement à l'interface : le flux quitte le milieu à forte μ.",
+      "magneticMatched": "Milieux identiques (μᵣ₁ = μᵣ₂) — aucun coude : la ligne de champ traverse tout droit."
+    }
   },
   "a11y": {
+    "keyboardHelp": {
+      "moveItemsHeading": "Déplacer la pointe du champ, le rapporteur et la boîte",
+      "materialListHeading": "Choisir un matériau",
+      "materialSingular": "matériau",
+      "materialPlural": "matériaux"
+    },
     "electric": {
       "screenSummary": {
         "playArea": "La zone de jeu montre deux diélectriques séparés par une interface horizontale, avec les vecteurs E et D dans chaque milieu.",
-        "controlArea": "Les commandes règlent la permittivité relative de chaque milieu, la charge superficielle libre σ_f, la magnitude de E₁, et des options pour composantes, lignes de champ, rapporteur, angles et charge liée. Tout réinitialiser restaure l'état initial.",
-        "interactionHint": "Faites glisser la pointe de E₁ pour changer son angle par rapport à la normale, puis ajustez εᵣ ou σ_f et observez quelles composantes restent continues. Activez la charge liée pour voir P et σ_b, qui expliquent pourquoi Eₙ saute."
+        "controlArea": "Les commandes règlent la permittivité relative de chaque milieu, la charge superficielle libre σ_f, la magnitude de E₁, et des options pour composantes, lignes de champ, rapporteur, angles, normale à la surface, boîte de Gauss et charge liée. Tout réinitialiser restaure l'état initial.",
+        "interactionHint": "Faites glisser la pointe de E₁ pour changer son angle par rapport à la normale, puis ajustez εᵣ ou σ_f et écoutez quelles composantes restent continues. Activez la boîte de Gauss et aplatissez-la pour dériver la condition aux limites, ou activez la charge liée pour entendre le σ_b qui explique pourquoi Eₙ saute."
       },
-      "currentDetails": "Conditions aux limites électriques à une interface plane.",
+      "details": {
+        "angles": "E₁ est à {{theta1}} degrés de la normale ; E₂ est à {{theta2}} degrés.",
+        "materials": "La permittivité relative vaut {{param1}} dans le milieu 1 et {{param2}} dans le milieu 2.",
+        "tangentialContinuous": "La composante tangentielle de E est continue : E₁ₜ égale E₂ₜ.",
+        "normalCompanionContinuous": "Il n'y a pas de charge superficielle libre, donc la composante normale de D est continue : D₁ₙ égale D₂ₙ.",
+        "normalCompanionJump": "La charge superficielle libre vaut {{value}}, donc la composante normale de D saute de cette valeur à l'interface.",
+        "normalRatio": "La composante normale de E dans le milieu 2 vaut {{ratio}} fois celle du milieu 1.",
+        "normalReversed": "La composante normale de E dans le milieu 2 s'est inversée : le champ y pointe maintenant loin du milieu 1.",
+        "boundCharge": "La charge superficielle liée σ_b vaut {{value}}."
+      },
+      "alerts": {
+        "reversed": "Le champ électrique normal dans le milieu 2 s'est inversé et pointe maintenant loin de l'interface.",
+        "restored": "Le champ électrique normal dans le milieu 2 pointe de nouveau vers le milieu 1."
+      },
+      "angleReadout": "E₁ est à {{theta1}} degrés de la normale ; E₂ est à {{theta2}} degrés.",
+      "fluxTally": "Le flux total à travers la boîte vaut {{total}} ; la charge libre enfermée vaut {{enclosed}} ; chaque face latérale contribue pour {{sides}}.",
       "controls": {
         "dragE1": "Direction du champ électrique incident E₁",
         "eps1": "Permittivité relative du milieu 1",
         "eps2": "Permittivité relative du milieu 2",
+        "paramHelp": "Curseur logarithmique de 1 à 1000. Le vide vaut 1 ; le verre environ 5 ; l'eau environ 80.",
         "preset1": "Matériau prédéfini du milieu 1",
         "preset2": "Matériau prédéfini du milieu 2",
         "magnitude": "Magnitude de E₁",
-        "surfaceCharge": "Densité de charge libre σ_f à l'interface"
+        "magnitudeHelp": "Longueur du vecteur champ incident ; son angle se règle en glissant la pointe.",
+        "magnitudeValue": "{{value}} unités de champ",
+        "surfaceCharge": "Densité de charge libre σ_f à l'interface",
+        "surfaceChargeHelp": "Zéro signifie aucune charge libre, et la composante normale de D est alors continue.",
+        "surfaceChargeValue": "{{value}} unités de charge",
+        "toolsHeading": "Outils",
+        "fluxBox": "Boîte de Gauss ; déplacez-la le long de l'interface",
+        "fluxBoxHeight": "Hauteur de la boîte ; aplatissez-la vers l'interface"
       }
     },
     "magnetic": {
       "screenSummary": {
         "playArea": "La zone de jeu montre deux milieux magnétiques séparés par une interface horizontale, avec les vecteurs H et B dans chaque milieu.",
-        "controlArea": "Les commandes règlent la perméabilité relative de chaque milieu, le courant surfacique libre K_f, la magnitude de H₁, et des options pour composantes, lignes de champ, rapporteur et angles. Tout réinitialiser restaure l'état initial.",
-        "interactionHint": "Faites glisser la pointe de H₁ pour changer son angle par rapport à la normale, puis ajustez μᵣ ou K_f et observez quelles composantes restent continues."
+        "controlArea": "Les commandes règlent la perméabilité relative de chaque milieu, le courant surfacique libre K_f, la magnitude de H₁, et des options pour composantes, lignes de champ, rapporteur, angles, normale à la surface, boucle d'Ampère et aimantation. Tout réinitialiser restaure l'état initial.",
+        "interactionHint": "Faites glisser la pointe de H₁ pour changer son angle par rapport à la normale, puis ajustez μᵣ ou K_f et écoutez quelles composantes restent continues. Activez la boucle d'Ampère et aplatissez-la pour dériver la condition aux limites, ou activez l'aimantation pour entendre le courant lié K_b qui explique pourquoi Bₜ saute."
       },
-      "currentDetails": "Conditions aux limites magnétiques à une interface plane.",
+      "details": {
+        "angles": "H₁ est à {{theta1}} degrés de la normale ; H₂ est à {{theta2}} degrés.",
+        "materials": "La perméabilité relative vaut {{param1}} dans le milieu 1 et {{param2}} dans le milieu 2.",
+        "tangentialContinuous": "Il n'y a pas de courant surfacique libre, donc la composante tangentielle de H est continue : H₁ₜ égale H₂ₜ.",
+        "tangentialJump": "Le courant surfacique libre vaut {{value}}, donc la composante tangentielle de H saute de cette valeur à l'interface.",
+        "normalCompanionContinuous": "La composante normale de B est continue : B₁ₙ égale B₂ₙ.",
+        "normalRatio": "La composante normale de H dans le milieu 2 vaut {{ratio}} fois celle du milieu 1.",
+        "tangentialReversed": "La composante tangentielle de H dans le milieu 2 s'est inversée : elle pointe maintenant à l'opposé de celle du milieu 1.",
+        "boundCurrent": "Le courant surfacique lié K_b vaut {{value}}."
+      },
+      "alerts": {
+        "reversed": "Le champ magnétique tangentiel dans le milieu 2 s'est inversé et pointe maintenant en sens contraire.",
+        "restored": "Le champ magnétique tangentiel dans le milieu 2 pointe de nouveau dans le même sens que dans le milieu 1."
+      },
+      "angleReadout": "H₁ est à {{theta1}} degrés de la normale ; H₂ est à {{theta2}} degrés.",
+      "fluxTally": "La circulation totale sur la boucle vaut {{total}} ; le courant libre enfermé vaut {{enclosed}} ; chaque côté latéral contribue pour {{sides}}.",
       "controls": {
         "dragH1": "Direction du champ magnétique incident H₁",
         "mu1": "Perméabilité relative du milieu 1",
         "mu2": "Perméabilité relative du milieu 2",
+        "paramHelp": "Curseur logarithmique de 1 à 20000. L'air vaut 1 ; la ferrite environ 1000 ; le fer environ 5000 ; le mu-métal environ 20000.",
         "preset1": "Matériau prédéfini du milieu 1",
         "preset2": "Matériau prédéfini du milieu 2",
         "magnitude": "Magnitude de H₁",
-        "surfaceCurrent": "Densité de courant libre K_f à l'interface"
+        "magnitudeHelp": "Longueur du vecteur champ incident ; son angle se règle en glissant la pointe.",
+        "magnitudeValue": "{{value}} unités de champ",
+        "surfaceCurrent": "Densité de courant libre K_f à l'interface",
+        "surfaceCurrentHelp": "Zéro signifie aucun courant libre, et la composante tangentielle de H est alors continue. Le sens positif sort de la page.",
+        "surfaceCurrentValue": "{{value}} unités de courant",
+        "toolsHeading": "Outils",
+        "fluxBox": "Boucle d'Ampère ; déplacez-la le long de l'interface",
+        "fluxBoxHeight": "Hauteur de la boucle ; aplatissez-la vers l'interface"
       }
     }
-  },
-  "preferences": {
-    "title": "Simulation",
-    "exampleToggle": "Exemple d'interrupteur"
   }
 }

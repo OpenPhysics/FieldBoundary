@@ -132,7 +132,7 @@ const FieldBoundaryColors = {
     projector: "#1565c0",
   }),
 
-  /** Polarization P arrows (bound-charge explanation layer). */
+  /** Polarization P / magnetization M arrows (bound-source explanation layer). */
   polarizationColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "polarization", {
     default: "#ce93d8",
     projector: "#7b1fa2",
@@ -152,6 +152,30 @@ const FieldBoundaryColors = {
   surfaceCurrentColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "surfaceCurrent", {
     default: "#ffd54f",
     projector: "#ef6c00",
+  }),
+
+  /** Bound surface current K_b glyphs (hollow; distinct from free K_f). */
+  boundCurrentColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "boundCurrent", {
+    default: "#f48fb1",
+    projector: "#ad1457",
+  }),
+
+  /** Gaussian pillbox / Amperian loop outline. */
+  fluxBoxStrokeProperty: new ProfileColorProperty(FieldBoundaryNamespace, "fluxBoxStroke", {
+    default: "#ffe082",
+    projector: "#e65100",
+  }),
+
+  /** Pillbox / loop face-contribution arrows and tick marks. */
+  fluxBoxAccentProperty: new ProfileColorProperty(FieldBoundaryNamespace, "fluxBoxAccent", {
+    default: "#b0bec5",
+    projector: "#455a64",
+  }),
+
+  /** Transient limiting-case callout background. */
+  calloutBackgroundColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "calloutBackground", {
+    default: "rgba(22, 33, 62, 0.94)",
+    projector: "rgba(255, 253, 231, 0.96)",
   }),
 
   /** Field-line lattice stroke. */

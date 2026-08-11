@@ -14,7 +14,9 @@ import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { Line, Node, Text } from "scenerystack/scenery";
 import { PhetFont } from "scenerystack/scenery-phet";
 import FieldBoundaryColors from "../../FieldBoundaryColors.js";
+import { COMPANION_SCALE_HEADROOM } from "../../FieldBoundaryConstants.js";
 import { medium2DisplayVector } from "../model/interfaceFields.js";
+import { displayScale } from "./displayScale.js";
 
 export type ComponentOverlayMode = "electric" | "magnetic";
 
@@ -84,12 +86,6 @@ export class ComponentOverlayNode extends Node {
       }
     };
 
-    const companionScale = (c1: Vector2, c2: Vector2, p1: Vector2, p2: Vector2): number => {
-      const maxLen = Math.max(c1.magnitude, c2.magnitude, 1e-6);
-      const primaryMax = Math.max(p1.magnitude, p2.magnitude, 1e-6);
-      return Math.min(1, (primaryMax * 1.15) / maxLen);
-    };
-
     Multilink.multilink(
       [primary1Property, primary2Property, companion1Property, companion2Property, freeSourceProperty],
       (p1, p2, c1, c2, freeSource) => {
@@ -98,7 +94,7 @@ export class ComponentOverlayNode extends Node {
         const tangentialContinuous = eMode || !sourced;
         const normalCompanionContinuous = !(eMode && sourced);
 
-        const scale = companionScale(c1, c2, p1, p2);
+        const scale = displayScale([c1, c2], [p1, p2], COMPANION_SCALE_HEADROOM);
         setSeg(p1t, new Vector2(p1.x, 0), "t", false);
         setSeg(p2t, new Vector2(p2.x, 0), "t", true);
         setSeg(p1n, new Vector2(0, p1.y), "n", false);

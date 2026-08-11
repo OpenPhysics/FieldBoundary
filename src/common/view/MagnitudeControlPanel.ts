@@ -5,6 +5,7 @@
  */
 import type { Property, TReadOnlyProperty } from "scenerystack/axon";
 import { Dimension2 } from "scenerystack/dot";
+import { StringUtils } from "scenerystack/phetcommon";
 import { Text, VBox } from "scenerystack/scenery";
 import { NumberControl, PhetFont } from "scenerystack/scenery-phet";
 import FieldBoundaryColors from "../../FieldBoundaryColors.js";
@@ -17,6 +18,9 @@ export class MagnitudeControlPanel extends FieldBoundaryPanel {
     magnitudeProperty: Property<number>,
     titleProperty: TReadOnlyProperty<string>,
     accessibleName: TReadOnlyProperty<string>,
+    accessibleHelpText: TReadOnlyProperty<string>,
+    /** e.g. "{{value}} field units" — a bare number tells a listener nothing. */
+    valueTextPattern: TReadOnlyProperty<string>,
   ) {
     const title = new Text(titleProperty, {
       font: new PhetFont({ size: 15, weight: "bold" }),
@@ -38,8 +42,10 @@ export class MagnitudeControlPanel extends FieldBoundaryPanel {
       sliderOptions: {
         trackSize: new Dimension2(120, 4),
         thumbSize: new Dimension2(14, 24),
+        pdomCreateAriaValueText: (value: number) => StringUtils.fillIn(valueTextPattern, { value: value.toFixed(1) }),
       },
       accessibleName,
+      accessibleHelpText,
       arrowButtonOptions: FLAT_RECTANGULAR_BUTTON_OPTIONS,
     });
 

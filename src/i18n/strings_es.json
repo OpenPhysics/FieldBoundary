@@ -10,16 +10,25 @@
     "epsr": "εᵣ",
     "mur": "μᵣ",
     "vacuum": "Vacío",
-    "water": "Agua",
     "glass": "Vidrio",
-    "highK": "Alto κ / μ",
+    "water": "Agua",
+    "conductorLike": "Casi conductor",
+    "air": "Aire",
+    "ferrite": "Ferrita",
+    "iron": "Hierro",
+    "muMetal": "Mu-metal",
     "custom": "Personalizado",
     "tools": "Herramientas",
     "components": "Mostrar componentes",
     "fieldLines": "Líneas de campo",
     "protractor": "Transportador",
     "angles": "Ángulos",
+    "surfaceNormal": "Normal a la superficie",
+    "pillbox": "Caja de Gauss",
+    "amperianLoop": "Espira de Ampère",
     "boundCharge": "Carga ligada (P, σ_b)",
+    "magnetization": "Imanación (M, K_b)",
+    "unitsNote": "Unidades de simulación: ε₀ = μ₀ = 1. Los campos, σ_f y K_f están en unidades arbitrarias; εᵣ y μᵣ son adimensionales.",
     "magnitudeE": "Magnitud de E₁",
     "magnitudeH": "Magnitud de H₁",
     "surfaceChargeTitle": "Carga superficial",
@@ -27,10 +36,7 @@
     "sigmaF": "σ_f",
     "sigmaB": "σ_b",
     "kF": "K_f",
-    "equationElectric": "CC eléctricas (σ_f = 0)",
-    "equationMagnetic": "CC magnéticas (K_f = 0)",
-    "equationElectricFree": "CC eléctricas (σ_f ≠ 0)",
-    "equationMagneticFree": "CC magnéticas (K_f ≠ 0)",
+    "kB": "K_b",
     "labelE1": "E₁",
     "labelE2": "E₂",
     "labelD1": "D₁",
@@ -41,47 +47,140 @@
     "labelH2": "H₂",
     "labelB1": "B₁",
     "labelB2": "B₂",
-    "tanRatioElectric": "tanθ₂/tanθ₁",
-    "tanRatioMagnetic": "tanθ₂/tanθ₁"
+    "labelM1": "M₁",
+    "labelM2": "M₂",
+    "tanRatio": "tanθ₂/tanθ₁",
+    "predictedElectric": "previsto ε₂/ε₁ = {{value}}",
+    "predictedMagnetic": "previsto μ₂/μ₁ = {{value}}",
+    "ratioSourcedElectric": "esta razón no es ε₂/ε₁ mientras σ_f ≠ 0",
+    "ratioSourcedMagnetic": "esta razón no es μ₂/μ₁ mientras K_f ≠ 0",
+    "equations": {
+      "electricTitle": "CC eléctricas (σ_f = 0)",
+      "electricTitleSourced": "CC eléctricas (σ_f ≠ 0)",
+      "magneticTitle": "CC magnéticas (K_f = 0)",
+      "magneticTitleSourced": "CC magnéticas (K_f ≠ 0)",
+      "eTangential": "E₁ₜ = E₂ₜ",
+      "dNormal": "D₁ₙ = D₂ₙ",
+      "dNormalJump": "D₁ₙ − D₂ₙ = σ_f",
+      "eNormal": "E₁ₙ ≠ E₂ₙ",
+      "dTangential": "D₁ₜ ≠ D₂ₜ",
+      "hTangential": "H₁ₜ = H₂ₜ",
+      "hTangentialJump": "H₂ₜ − H₁ₜ = K_f",
+      "bNormal": "B₁ₙ = B₂ₙ",
+      "hNormal": "H₁ₙ ≠ H₂ₙ",
+      "bTangential": "B₁ₜ ≠ B₂ₜ",
+      "duality": "Dualidad con la otra pantalla:  Eₜ ↔ Hₜ,  Dₙ ↔ Bₙ,  σ_f ↔ K_f,  P ↔ M"
+    },
+    "flux": {
+      "electricTitle": "∮ D·dA sobre la caja",
+      "magneticTitle": "∮ H·dl sobre la espira",
+      "electricTop": "Cara superior (D₁ₙ w)",
+      "electricBottom": "Cara inferior (−D₂ₙ w)",
+      "magneticTop": "Lado superior (−H₁ₜ w)",
+      "magneticBottom": "Lado inferior (H₂ₜ w)",
+      "sides": "Lados laterales (se cancelan)",
+      "electricTotal": "Total ∮ D·dA",
+      "magneticTotal": "Total ∮ H·dl",
+      "electricEnclosed": "Q_f encerrada (σ_f w)",
+      "magneticEnclosed": "I_f encerrada (K_f w)",
+      "electricHint": "Aplana la caja con el tirador: los términos laterales → 0 y queda D₁ₙ − D₂ₙ = σ_f.",
+      "magneticHint": "Aplana la espira con el tirador: los términos laterales → 0 y queda H₂ₜ − H₁ₜ = K_f."
+    },
+    "callout": {
+      "electricMedium2": "εᵣ₂ ≫ εᵣ₁ — E₂ gira casi paralelo a la interfaz: E₂ₙ → 0 mientras E₂ₜ = E₁ₜ no cambia.",
+      "electricMedium1": "εᵣ₁ ≫ εᵣ₂ — E₂ gira casi normal a la interfaz: E₂ₙ se amplifica mientras E₂ₜ = E₁ₜ no cambia.",
+      "electricMatched": "Medios iguales (εᵣ₁ = εᵣ₂) — sin quiebre: la línea de campo cruza recta.",
+      "magneticMedium2": "μᵣ₂ ≫ μᵣ₁ — canalización del flujo: B₂ gira casi paralelo a la interfaz y se conduce a lo largo del medio 2. Así funciona el blindaje magnético.",
+      "magneticMedium1": "μᵣ₁ ≫ μᵣ₂ — B₂ gira casi normal a la interfaz: el flujo abandona el medio de alta μ.",
+      "magneticMatched": "Medios iguales (μᵣ₁ = μᵣ₂) — sin quiebre: la línea de campo cruza recta."
+    }
   },
   "a11y": {
+    "keyboardHelp": {
+      "moveItemsHeading": "Mover la punta del campo, el transportador y la caja",
+      "materialListHeading": "Elegir un material",
+      "materialSingular": "material",
+      "materialPlural": "materiales"
+    },
     "electric": {
       "screenSummary": {
         "playArea": "El área de juego muestra dos medios dieléctricos unidos en una interfaz horizontal, con vectores E y D en cada medio.",
-        "controlArea": "Los controles fijan la permitividad relativa de cada medio, la carga superficial libre σ_f, la magnitud de E₁ y opciones de componentes, líneas de campo, transportador, ángulos y carga ligada. Restablecer todo vuelve al estado inicial.",
-        "interactionHint": "Arrastra la punta de E₁ para cambiar su ángulo respecto a la normal, luego ajusta εᵣ o σ_f y observa qué componentes permanecen continuos. Activa la carga ligada para ver P y σ_b, que explican por qué salta Eₙ."
+        "controlArea": "Los controles fijan la permitividad relativa de cada medio, la carga superficial libre σ_f, la magnitud de E₁ y opciones de componentes, líneas de campo, transportador, ángulos, normal a la superficie, caja de Gauss y carga ligada. Restablecer todo vuelve al estado inicial.",
+        "interactionHint": "Arrastra la punta de E₁ para cambiar su ángulo respecto a la normal, luego ajusta εᵣ o σ_f y escucha qué componentes permanecen continuos. Activa la caja de Gauss y aplánala para deducir la condición de frontera, o activa la carga ligada para oír el σ_b que explica por qué salta Eₙ."
       },
-      "currentDetails": "Condiciones de frontera eléctricas en una interfaz plana.",
+      "details": {
+        "angles": "E₁ está a {{theta1}} grados de la normal; E₂ está a {{theta2}} grados.",
+        "materials": "La permitividad relativa es {{param1}} en el medio 1 y {{param2}} en el medio 2.",
+        "tangentialContinuous": "La componente tangencial de E es continua: E₁ₜ es igual a E₂ₜ.",
+        "normalCompanionContinuous": "No hay carga superficial libre, así que la componente normal de D es continua: D₁ₙ es igual a D₂ₙ.",
+        "normalCompanionJump": "La carga superficial libre es {{value}}, así que la componente normal de D salta esa cantidad en la interfaz.",
+        "normalRatio": "La componente normal de E en el medio 2 es {{ratio}} veces la del medio 1.",
+        "normalReversed": "La componente normal de E en el medio 2 se ha invertido: allí el campo ahora apunta lejos del medio 1.",
+        "boundCharge": "La carga superficial ligada σ_b es {{value}}."
+      },
+      "alerts": {
+        "reversed": "El campo eléctrico normal en el medio 2 se ha invertido y ahora apunta lejos de la interfaz.",
+        "restored": "El campo eléctrico normal en el medio 2 vuelve a apuntar hacia el medio 1."
+      },
+      "angleReadout": "E₁ está a {{theta1}} grados de la normal; E₂ está a {{theta2}} grados.",
+      "fluxTally": "El flujo total a través de la caja es {{total}}; la carga libre encerrada es {{enclosed}}; cada cara lateral aporta {{sides}}.",
       "controls": {
         "dragE1": "Dirección del campo eléctrico incidente E₁",
         "eps1": "Permitividad relativa del medio 1",
         "eps2": "Permitividad relativa del medio 2",
+        "paramHelp": "Deslizador logarítmico de 1 a 1000. El vacío es 1; el vidrio cerca de 5; el agua cerca de 80.",
         "preset1": "Material predefinido del medio 1",
         "preset2": "Material predefinido del medio 2",
         "magnitude": "Magnitud de E₁",
-        "surfaceCharge": "Densidad de carga libre σ_f en la interfaz"
+        "magnitudeHelp": "Longitud del vector de campo incidente; su ángulo se ajusta arrastrando la punta.",
+        "magnitudeValue": "{{value}} unidades de campo",
+        "surfaceCharge": "Densidad de carga libre σ_f en la interfaz",
+        "surfaceChargeHelp": "Cero significa que no hay carga libre, y entonces la componente normal de D es continua.",
+        "surfaceChargeValue": "{{value}} unidades de carga",
+        "toolsHeading": "Herramientas",
+        "fluxBox": "Caja de Gauss; muévela a lo largo de la interfaz",
+        "fluxBoxHeight": "Altura de la caja; aplánala hacia la interfaz"
       }
     },
     "magnetic": {
       "screenSummary": {
         "playArea": "El área de juego muestra dos medios magnéticos unidos en una interfaz horizontal, con vectores H y B en cada medio.",
-        "controlArea": "Los controles fijan la permeabilidad relativa de cada medio, la corriente superficial libre K_f, la magnitud de H₁ y opciones de componentes, líneas de campo, transportador y ángulos. Restablecer todo vuelve al estado inicial.",
-        "interactionHint": "Arrastra la punta de H₁ para cambiar su ángulo respecto a la normal, luego ajusta μᵣ o K_f y observa qué componentes permanecen continuos."
+        "controlArea": "Los controles fijan la permeabilidad relativa de cada medio, la corriente superficial libre K_f, la magnitud de H₁ y opciones de componentes, líneas de campo, transportador, ángulos, normal a la superficie, espira de Ampère e imanación. Restablecer todo vuelve al estado inicial.",
+        "interactionHint": "Arrastra la punta de H₁ para cambiar su ángulo respecto a la normal, luego ajusta μᵣ o K_f y escucha qué componentes permanecen continuos. Activa la espira de Ampère y aplánala para deducir la condición de frontera, o activa la imanación para oír la corriente ligada K_b que explica por qué salta Bₜ."
       },
-      "currentDetails": "Condiciones de frontera magnéticas en una interfaz plana.",
+      "details": {
+        "angles": "H₁ está a {{theta1}} grados de la normal; H₂ está a {{theta2}} grados.",
+        "materials": "La permeabilidad relativa es {{param1}} en el medio 1 y {{param2}} en el medio 2.",
+        "tangentialContinuous": "No hay corriente superficial libre, así que la componente tangencial de H es continua: H₁ₜ es igual a H₂ₜ.",
+        "tangentialJump": "La corriente superficial libre es {{value}}, así que la componente tangencial de H salta esa cantidad en la interfaz.",
+        "normalCompanionContinuous": "La componente normal de B es continua: B₁ₙ es igual a B₂ₙ.",
+        "normalRatio": "La componente normal de H en el medio 2 es {{ratio}} veces la del medio 1.",
+        "tangentialReversed": "La componente tangencial de H en el medio 2 se ha invertido: ahora apunta al revés que en el medio 1.",
+        "boundCurrent": "La corriente superficial ligada K_b es {{value}}."
+      },
+      "alerts": {
+        "reversed": "El campo magnético tangencial en el medio 2 se ha invertido y ahora apunta en sentido contrario.",
+        "restored": "El campo magnético tangencial en el medio 2 vuelve a apuntar igual que en el medio 1."
+      },
+      "angleReadout": "H₁ está a {{theta1}} grados de la normal; H₂ está a {{theta2}} grados.",
+      "fluxTally": "La circulación total en la espira es {{total}}; la corriente libre encerrada es {{enclosed}}; cada lado lateral aporta {{sides}}.",
       "controls": {
         "dragH1": "Dirección del campo magnético incidente H₁",
         "mu1": "Permeabilidad relativa del medio 1",
         "mu2": "Permeabilidad relativa del medio 2",
+        "paramHelp": "Deslizador logarítmico de 1 a 20000. El aire es 1; la ferrita cerca de 1000; el hierro cerca de 5000; el mu-metal cerca de 20000.",
         "preset1": "Material predefinido del medio 1",
         "preset2": "Material predefinido del medio 2",
         "magnitude": "Magnitud de H₁",
-        "surfaceCurrent": "Densidad de corriente libre K_f en la interfaz"
+        "magnitudeHelp": "Longitud del vector de campo incidente; su ángulo se ajusta arrastrando la punta.",
+        "magnitudeValue": "{{value}} unidades de campo",
+        "surfaceCurrent": "Densidad de corriente libre K_f en la interfaz",
+        "surfaceCurrentHelp": "Cero significa que no hay corriente libre, y entonces la componente tangencial de H es continua. El sentido positivo sale de la página.",
+        "surfaceCurrentValue": "{{value}} unidades de corriente",
+        "toolsHeading": "Herramientas",
+        "fluxBox": "Espira de Ampère; muévela a lo largo de la interfaz",
+        "fluxBoxHeight": "Altura de la espira; aplánala hacia la interfaz"
       }
     }
-  },
-  "preferences": {
-    "title": "Simulación",
-    "exampleToggle": "Interruptor de ejemplo"
   }
 }
