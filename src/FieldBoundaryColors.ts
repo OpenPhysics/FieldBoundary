@@ -23,7 +23,7 @@ const FieldBoundaryColors = {
   }),
 
   panelBorderColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "panelBorder", {
-    default: "#0f3460",
+    default: "#3a6ea5",
     projector: "#999999",
   }),
 
@@ -55,7 +55,7 @@ const FieldBoundaryColors = {
 
   /** Medium 2 (lower) fill. */
   medium2FillProperty: new ProfileColorProperty(FieldBoundaryNamespace, "medium2Fill", {
-    default: "#2a2a2a",
+    default: "#3a322c",
     projector: "#e8e8e8",
   }),
 
@@ -91,7 +91,7 @@ const FieldBoundaryColors = {
 
   /** Magnetic induction B (companion). */
   bFieldColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "bField", {
-    default: "#ab47bc",
+    default: "#d4a8e8",
     projector: "#6a1b9a",
   }),
 

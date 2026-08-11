@@ -42,7 +42,7 @@ export class ToolsControlPanel extends FieldBoundaryPanel {
       {
         spacing: 8,
         checkboxOptions: {
-          checkboxColor: FieldBoundaryColors.textColorProperty,
+          checkboxColor: FieldBoundaryColors.controlSurfaceTextColorProperty,
           checkboxColorBackground: FieldBoundaryColors.controlSurfaceColorProperty,
         },
       },
