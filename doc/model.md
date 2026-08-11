@@ -28,6 +28,16 @@ With \(\sigma_f=0\): \(D_{1n}=D_{2n}\) and \(D_{2t}/D_{1t}=\varepsilon_2/\vareps
 With \(\sigma_f\ne 0\): \(D_{1n}-D_{2n}=\sigma_f\); large positive \(\sigma_f\) can
 reverse \(E_{2n}\) so the medium-2 field points away from medium 1.
 
+Polarization \(\vec{P}_i=(\varepsilon_i-1)\vec{E}_i\) leaves bound surface charge
+
+\[
+\sigma_b=P_{1n}-P_{2n},
+\]
+
+so \(E_{1n}-E_{2n}=\sigma_f-\sigma_b\). When \(\sigma_f=0\), the normal-\(E\) jump
+is entirely due to \(\sigma_b\). Vacuum (\(\varepsilon=1\)) has \(\vec{P}=0\).
+Equal media with \(\sigma_f=0\) have \(\sigma_b=0\).
+
 Field-line angles from the normal satisfy
 
 \[
@@ -65,4 +75,7 @@ primary so large \(\varepsilon_r\)/\(\mu_r\) stay on-screen. Component-axis
 overlays still reflect medium-2 magnitudes into the lower half-plane via
 `medium2DisplayVector` to compare \(|E_n|\)/\(|D_n|\) across the interface.
 Free surface sources are drawn on the interface: \(+\)/\(-\) markers for
-\(\sigma_f\), and ⊙/⊗ markers for \(K_f\) (out of / into the page).
+\(\sigma_f\), and ⊙/⊗ markers for \(K_f\) (out of / into the page). On the
+Electric screen, an optional bound-charge layer shows \(\vec{P}\) arrows and
+hollow \(\sigma_b\) glyphs (offset from free-charge markers) explaining why
+\(E_n\) jumps when \(\varepsilon\) differs.

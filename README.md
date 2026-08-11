@@ -4,10 +4,10 @@ Interactive Maxwell **planar interface** boundary conditions for \(\vec{E}/\vec{
 
 ## Features
 
-- Electric screen: dielectric interface with \(\vec{E}\) and \(\vec{D}\), \(\varepsilon_r\) presets/sliders, adjustable free surface charge \(\sigma_f\), component overlay, field lines, protractor, and angle readouts
+- Electric screen: dielectric interface with \(\vec{E}\) and \(\vec{D}\), \(\varepsilon_r\) presets/sliders, adjustable free surface charge \(\sigma_f\), optional bound charge \(\sigma_b\) with polarization \(\vec{P}\) arrows, component overlay, field lines, protractor, and angle readouts
 - Magnetic screen: same interaction grammar for \(\vec{H}\) and \(\vec{B}\) with \(\mu_r\) and free surface current \(K_f\)
 - Equation strip highlighting continuous BC terms (\(E_t\), \(D_n\) or \(H_t\), \(B_n\)), switching to jump conditions when \(\sigma_f\) or \(K_f\) is nonzero
-- Interface glyphs for free surface charge (\(+\)/\(-\)) and surface current (⊙/⊗)
+- Interface glyphs for free surface charge (\(+\)/\(-\)), bound charge (hollow \(+\)/\(-\)), and surface current (⊙/⊗)
 - English, Spanish, and French localization via `StringManager`
 - Default and projector color profiles
 - Progressive Web App (installable, offline-capable)

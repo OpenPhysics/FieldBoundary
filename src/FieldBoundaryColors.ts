@@ -27,6 +27,19 @@ const FieldBoundaryColors = {
     projector: "#999999",
   }),
 
+  /**
+   * Semi-transparent panel fill for controls overlaid on the play area (the
+   * medium panels), so field lines remain visible underneath.
+   */
+  translucentPanelBackgroundColorProperty: new ProfileColorProperty(
+    FieldBoundaryNamespace,
+    "translucentPanelBackground",
+    {
+      default: "rgba(22, 33, 62, 0.85)",
+      projector: "rgba(245, 245, 245, 0.9)",
+    },
+  ),
+
   textColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "text", {
     default: "#e0e0e0",
     projector: "#1a1a1a",
@@ -117,6 +130,22 @@ const FieldBoundaryColors = {
   negativeChargeColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "negativeCharge", {
     default: "#4fc3f7",
     projector: "#1565c0",
+  }),
+
+  /** Polarization P arrows (bound-charge explanation layer). */
+  polarizationColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "polarization", {
+    default: "#ce93d8",
+    projector: "#7b1fa2",
+  }),
+
+  /** Bound surface charge σ_b glyphs (distinct from free-charge colors). */
+  boundChargePositiveColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "boundChargePositive", {
+    default: "#f48fb1",
+    projector: "#ad1457",
+  }),
+  boundChargeNegativeColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "boundChargeNegative", {
+    default: "#80deea",
+    projector: "#00838f",
   }),
 
   /** Free surface current K_f (⊙ out of page / ⊗ into page) markers. */

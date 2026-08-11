@@ -5,8 +5,10 @@ import { Vector2 } from "scenerystack/dot";
 import { describe, expect, it } from "vitest";
 import {
   angleFromNormal,
+  boundSurfaceCharge,
   fieldFromPolar,
   medium2DisplayVector,
+  polarization,
   refractElectric,
   refractMagnetic,
 } from "../../../src/common/model/interfaceFields.js";
@@ -113,5 +115,34 @@ describe("interfaceFields", () => {
     const free = refractMagnetic(h1, 2, 8);
     expect(sourced.h2.equals(free.h2)).toBe(true);
     expect(sourced.b2.equals(free.b2)).toBe(true);
+  });
+
+  it("polarization is (ε − 1)E and vanishes in vacuum", () => {
+    const e = new Vector2(1, 2);
+    expect(polarization(e, 1).equals(new Vector2(0, 0))).toBe(true);
+    expect(polarization(e, 4).x).toBeCloseTo(3);
+    expect(polarization(e, 4).y).toBeCloseTo(6);
+  });
+
+  it("bound σ_b explains the Eₙ jump: E₁ₙ − E₂ₙ = σ_f − σ_b", () => {
+    const e1 = new Vector2(1.2, 2.4);
+    const sigmaF = 0.75;
+    const { e2, p1, p2, sigmaB } = refractElectric(e1, 1, 4, sigmaF);
+    expect(sigmaB).toBeCloseTo(boundSurfaceCharge(p1, p2));
+    expect(e1.y - e2.y).toBeCloseTo(sigmaF - sigmaB);
+  });
+
+  it("with σ_f = 0, Eₙ jump equals −σ_b and Dₙ stays continuous", () => {
+    const e1 = fieldFromPolar(2, Math.PI / 5);
+    const { e2, d1, d2, sigmaB } = refractElectric(e1, 1, 4, 0);
+    expect(d1.y).toBeCloseTo(d2.y);
+    expect(e1.y - e2.y).toBeCloseTo(-sigmaB);
+  });
+
+  it("equal dielectrics have zero bound charge when σ_f = 0", () => {
+    const e1 = fieldFromPolar(2, Math.PI / 5);
+    const { sigmaB, p1, p2 } = refractElectric(e1, 3, 3, 0);
+    expect(sigmaB).toBeCloseTo(0);
+    expect(p1.equals(p2)).toBe(true);
   });
 });

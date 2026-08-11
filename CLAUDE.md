@@ -26,10 +26,13 @@ Physics notes: `doc/model.md`. Architecture: `doc/implementation-notes.md`.
 | Area | Location |
 |---|---|
 | Shared BC math | `src/common/model/interfaceFields.ts` |
+| Shared model skeleton | `src/common/model/DualMediaInterfaceModel.ts` |
 | Tool toggles | `src/common/model/SharedModel.ts` |
+| Shared screen view | `src/common/view/InterfaceScreenView.ts` |
+| Screen factory | `src/common/createFieldBoundaryScreen.ts` |
 | Electric model / view | `src/electric/model/ElectricModel.ts`, `src/electric/view/ElectricScreenView.ts` |
 | Magnetic model / view | `src/magnetic/model/MagneticModel.ts`, `src/magnetic/view/MagneticScreenView.ts` |
-| Play-area nodes | `src/common/view/` (`InterfaceBackgroundNode`, `BoundaryVectorsNode`, `ComponentOverlayNode`, `FieldLinesNode`, `FreeSourceOverlayNode`, `FreeSourceControlPanel`, …) |
+| Play-area nodes | `src/common/view/` (`InterfaceBackgroundNode`, `BoundaryVectorsNode`, `ComponentOverlayNode`, `FieldLinesNode`, `FreeSourceOverlayNode`, `BoundPolarizationNode`, `FreeSourceControlPanel`, …) |
 | Colors / strings | `FieldBoundaryColors.ts`, `src/i18n/StringManager.ts` |
 
 ## Model conventions
@@ -39,6 +42,7 @@ Physics notes: `doc/model.md`. Architecture: `doc/implementation-notes.md`.
 - Angle \(\theta\) of the primary field is from the normal: \(\tan\theta=E_t/E_n\).
 - Medium-2 fields are continuous with medium 1 (point toward \(+\hat{n}\)); drawn in the lower half-plane by anchoring the arrow tip at the interface and the tail at \((-E_t,-E_n)\). For equal media the two arrows are parallel. `medium2DisplayVector` is used only by component-axis overlays.
 - Free surface charge \(\sigma_f\) (Electric) and free surface current \(K_f\) (Magnetic, along \(+\hat{z}\)) are adjustable on the interface and default to 0. With \(\sigma_f\ne 0\): \(D_{1n}-D_{2n}=\sigma_f\) (Dₙ discontinuous). With \(K_f\ne 0\): \(H_{2t}-H_{1t}=K_f\) (Hₜ discontinuous). The equation strip and component-overlay highlighting switch to reflect the sourced BC.
+- Bound charge (Electric, toggle): \(\vec{P}=(\varepsilon_r-1)\vec{E}\), \(\sigma_b=P_{1n}-P_{2n}\). Explains \(E_{1n}-E_{2n}=\sigma_f-\sigma_b\). Hollow glyphs + \(\vec{P}\) arrows via `BoundPolarizationNode`.
 
 ### Boundary conditions
 

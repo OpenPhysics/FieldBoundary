@@ -19,11 +19,13 @@
     "fieldLines": "Field lines",
     "protractor": "Protractor",
     "angles": "Angles",
+    "boundCharge": "Bound charge (P, σ_b)",
     "magnitudeE": "E₁ magnitude",
     "magnitudeH": "H₁ magnitude",
     "surfaceChargeTitle": "Surface charge",
     "surfaceCurrentTitle": "Surface current",
     "sigmaF": "σ_f",
+    "sigmaB": "σ_b",
     "kF": "K_f",
     "equationElectric": "Electric BC (σ_f = 0)",
     "equationMagnetic": "Magnetic BC (K_f = 0)",
@@ -33,6 +35,8 @@
     "labelE2": "E₂",
     "labelD1": "D₁",
     "labelD2": "D₂",
+    "labelP1": "P₁",
+    "labelP2": "P₂",
     "labelH1": "H₁",
     "labelH2": "H₂",
     "labelB1": "B₁",
@@ -44,8 +48,8 @@
     "electric": {
       "screenSummary": {
         "playArea": "The play area shows two dielectric media meeting at a horizontal interface, with electric field E and displacement D vectors in each medium.",
-        "controlArea": "Controls set relative permittivity for each medium, free surface charge σ_f, E₁ magnitude, and toggles for components, field lines, protractor, and angles. Reset All restores the starting state.",
-        "interactionHint": "Drag the tip of E₁ to change its angle from the surface normal, then adjust εᵣ or σ_f and watch which components stay continuous."
+        "controlArea": "Controls set relative permittivity for each medium, free surface charge σ_f, E₁ magnitude, and toggles for components, field lines, protractor, angles, and bound charge. Reset All restores the starting state.",
+        "interactionHint": "Drag the tip of E₁ to change its angle from the surface normal, then adjust εᵣ or σ_f and watch which components stay continuous. Turn on bound charge to see polarization P and σ_b that explain why Eₙ jumps."
       },
       "currentDetails": "Electric boundary conditions at a planar interface.",
       "controls": {

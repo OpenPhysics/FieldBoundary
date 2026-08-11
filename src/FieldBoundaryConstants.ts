@@ -63,6 +63,12 @@ export const DEFAULT_SURFACE_CURRENT = 0;
 export const SURFACE_CHARGE_RANGE = new Range(-2, 2);
 
 /**
+ * Display scale for bound-charge glyph density (|σ_b| mapped onto this ceiling).
+ * Typical |σ_b| for default E₁ / ε presets is O(1).
+ */
+export const BOUND_CHARGE_DISPLAY_MAX = 3;
+
+/**
  * Free surface current density K_f slider range (K_f along +ẑ, out of page).
  * Comparable to typical Hₜ magnitudes so the tangential H jump is visible.
  */
@@ -96,5 +102,6 @@ FieldBoundaryNamespace.register("FieldBoundaryConstants", {
   DEFAULT_SURFACE_CURRENT,
   SURFACE_CHARGE_RANGE,
   SURFACE_CURRENT_RANGE,
+  BOUND_CHARGE_DISPLAY_MAX,
   FIELD_LINE_COUNT,
 });

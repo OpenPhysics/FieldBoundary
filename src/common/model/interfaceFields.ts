@@ -41,13 +41,37 @@ export function refractElectric(
   eps1: number,
   eps2: number,
   sigmaF = 0,
-): { e2: Vector2; d1: Vector2; d2: Vector2 } {
+): { e2: Vector2; d1: Vector2; d2: Vector2; p1: Vector2; p2: Vector2; sigmaB: number } {
   const e2 = new Vector2(e1.x, (e1.y * eps1 - sigmaF) / eps2);
+  const d1 = e1.timesScalar(eps1);
+  const d2 = e2.timesScalar(eps2);
+  const p1 = polarization(e1, eps1);
+  const p2 = polarization(e2, eps2);
   return {
     e2,
-    d1: e1.timesScalar(eps1),
-    d2: e2.timesScalar(eps2),
+    d1,
+    d2,
+    p1,
+    p2,
+    sigmaB: boundSurfaceCharge(p1, p2),
   };
+}
+
+/**
+ * Polarization in a linear dielectric: P = (εᵣ − 1) E  (ε₀ = 1).
+ * Vacuum (εᵣ = 1) has P = 0.
+ */
+export function polarization(e: Vector2, eps: number): Vector2 {
+  return e.timesScalar(eps - 1);
+}
+
+/**
+ * Bound surface charge on the interface with n̂ from medium 2 → 1:
+ *   σ_b = P₁ₙ − P₂ₙ
+ * Related identity: E₁ₙ − E₂ₙ = σ_f − σ_b  (and D₁ₙ − D₂ₙ = σ_f).
+ */
+export function boundSurfaceCharge(p1: Vector2, p2: Vector2): number {
+  return p1.y - p2.y;
 }
 
 /**

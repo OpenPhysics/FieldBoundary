@@ -2,6 +2,7 @@
  * SharedModel.ts
  *
  * Cross-screen view-tool toggles. Each screen owns its own instance.
+ * Electric-only bound-charge visibility lives on ElectricModel.
  */
 import { BooleanProperty } from "scenerystack/axon";
 

@@ -19,11 +19,13 @@
     "fieldLines": "Líneas de campo",
     "protractor": "Transportador",
     "angles": "Ángulos",
+    "boundCharge": "Carga ligada (P, σ_b)",
     "magnitudeE": "Magnitud de E₁",
     "magnitudeH": "Magnitud de H₁",
     "surfaceChargeTitle": "Carga superficial",
     "surfaceCurrentTitle": "Corriente superficial",
     "sigmaF": "σ_f",
+    "sigmaB": "σ_b",
     "kF": "K_f",
     "equationElectric": "CC eléctricas (σ_f = 0)",
     "equationMagnetic": "CC magnéticas (K_f = 0)",
@@ -33,6 +35,8 @@
     "labelE2": "E₂",
     "labelD1": "D₁",
     "labelD2": "D₂",
+    "labelP1": "P₁",
+    "labelP2": "P₂",
     "labelH1": "H₁",
     "labelH2": "H₂",
     "labelB1": "B₁",
@@ -44,8 +48,8 @@
     "electric": {
       "screenSummary": {
         "playArea": "El área de juego muestra dos medios dieléctricos unidos en una interfaz horizontal, con vectores E y D en cada medio.",
-        "controlArea": "Los controles fijan la permitividad relativa de cada medio, la carga superficial libre σ_f, la magnitud de E₁ y opciones de componentes, líneas de campo, transportador y ángulos. Restablecer todo vuelve al estado inicial.",
-        "interactionHint": "Arrastra la punta de E₁ para cambiar su ángulo respecto a la normal, luego ajusta εᵣ o σ_f y observa qué componentes permanecen continuos."
+        "controlArea": "Los controles fijan la permitividad relativa de cada medio, la carga superficial libre σ_f, la magnitud de E₁ y opciones de componentes, líneas de campo, transportador, ángulos y carga ligada. Restablecer todo vuelve al estado inicial.",
+        "interactionHint": "Arrastra la punta de E₁ para cambiar su ángulo respecto a la normal, luego ajusta εᵣ o σ_f y observa qué componentes permanecen continuos. Activa la carga ligada para ver P y σ_b, que explican por qué salta Eₙ."
       },
       "currentDetails": "Condiciones de frontera eléctricas en una interfaz plana.",
       "controls": {

@@ -5,6 +5,7 @@
  */
 import type { Property, TReadOnlyProperty } from "scenerystack/axon";
 import { Dimension2 } from "scenerystack/dot";
+import type { Color } from "scenerystack/scenery";
 import { type Node, Text, VBox } from "scenerystack/scenery";
 import { NumberControl, PhetFont } from "scenerystack/scenery-phet";
 import { ComboBox, type ComboBoxItem } from "scenerystack/sun";
@@ -37,6 +38,7 @@ export class MediaControlPanel extends FieldBoundaryPanel {
     onUserParameterChange: () => void,
     strings: MediaControlPanelStrings,
     listParent: Node,
+    options?: { fill?: TReadOnlyProperty<Color> },
   ) {
     const title = new Text(strings.title, {
       font: new PhetFont({ size: 15, weight: "bold" }),
@@ -92,6 +94,7 @@ export class MediaControlPanel extends FieldBoundaryPanel {
         align: "left",
         children: [title, comboBox, numberControl],
       }),
+      options?.fill ? { fill: options.fill } : {},
     );
   }
 }

@@ -19,11 +19,13 @@
     "fieldLines": "Lignes de champ",
     "protractor": "Rapporteur",
     "angles": "Angles",
+    "boundCharge": "Charge liée (P, σ_b)",
     "magnitudeE": "Magnitude de E₁",
     "magnitudeH": "Magnitude de H₁",
     "surfaceChargeTitle": "Charge superficielle",
     "surfaceCurrentTitle": "Courant surfacique",
     "sigmaF": "σ_f",
+    "sigmaB": "σ_b",
     "kF": "K_f",
     "equationElectric": "Conditions aux limites E (σ_f = 0)",
     "equationMagnetic": "Conditions aux limites M (K_f = 0)",
@@ -33,6 +35,8 @@
     "labelE2": "E₂",
     "labelD1": "D₁",
     "labelD2": "D₂",
+    "labelP1": "P₁",
+    "labelP2": "P₂",
     "labelH1": "H₁",
     "labelH2": "H₂",
     "labelB1": "B₁",
@@ -44,8 +48,8 @@
     "electric": {
       "screenSummary": {
         "playArea": "La zone de jeu montre deux diélectriques séparés par une interface horizontale, avec les vecteurs E et D dans chaque milieu.",
-        "controlArea": "Les commandes règlent la permittivité relative de chaque milieu, la charge superficielle libre σ_f, la magnitude de E₁, et des options pour composantes, lignes de champ, rapporteur et angles. Tout réinitialiser restaure l'état initial.",
-        "interactionHint": "Faites glisser la pointe de E₁ pour changer son angle par rapport à la normale, puis ajustez εᵣ ou σ_f et observez quelles composantes restent continues."
+        "controlArea": "Les commandes règlent la permittivité relative de chaque milieu, la charge superficielle libre σ_f, la magnitude de E₁, et des options pour composantes, lignes de champ, rapporteur, angles et charge liée. Tout réinitialiser restaure l'état initial.",
+        "interactionHint": "Faites glisser la pointe de E₁ pour changer son angle par rapport à la normale, puis ajustez εᵣ ou σ_f et observez quelles composantes restent continues. Activez la charge liée pour voir P et σ_b, qui expliquent pourquoi Eₙ saute."
       },
       "currentDetails": "Conditions aux limites électriques à une interface plane.",
       "controls": {

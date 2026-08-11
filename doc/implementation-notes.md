@@ -2,9 +2,22 @@
 
 ## Architecture
 
-Two screens share view widgets under `src/common/view/` and pure BC helpers in
-`src/common/model/interfaceFields.ts`. Each screen owns a `SharedModel` instance
-for tool toggles (components, field lines, protractor, angles).
+Two screens share:
+
+- BC helpers in `src/common/model/interfaceFields.ts`
+- Model skeleton in `src/common/model/DualMediaInterfaceModel.ts`
+  (`ElectricModel` / `MagneticModel` keep public `e*` / `h*` aliases)
+- Play-area layout in `src/common/view/InterfaceScreenView.ts`
+  (thin screen views map model → config)
+- Screen wiring via `fieldBoundaryScreenSuperArgs` in
+  `src/common/createFieldBoundaryScreen.ts`
+- Shared a11y: `FieldBoundaryKeyboardHelpContent`,
+  `FieldBoundaryScreenSummaryContent`
+- View widgets under `src/common/view/` and tool toggles on `SharedModel`
+
+Each screen owns a `SharedModel` for components / field lines / protractor /
+angles. Bound-charge visibility (`showBoundChargeProperty`) lives on
+`ElectricModel` only.
 
 State flow (Electric):
 
@@ -14,6 +27,8 @@ State flow (Electric):
 3. View nodes multilink those properties onto `ArrowNode`s, dashed components, a
    `CanvasNode` field-line lattice, and `FreeSourceOverlayNode` charge glyphs.
    `EquationStripNode` / `ComponentOverlayNode` switch highlighting when σ_f ≠ 0.
+   Optional `BoundPolarizationNode` shows \(\vec{P}\) and hollow σ_b glyphs
+   (toggle: `showBoundChargeProperty` on `ElectricModel`).
 
 Magnetic mirrors the same pattern with `refractMagnetic` and `surfaceCurrentProperty` (K_f).
 
