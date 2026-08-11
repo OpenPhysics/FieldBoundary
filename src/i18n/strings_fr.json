@@ -1,8 +1,8 @@
 {
   "title": "Frontière de champ",
   "screens": {
-    "intro": "Intro",
-    "magnetics": "Magnétique"
+    "electric": "Électrique",
+    "magnetic": "Magnétique"
   },
   "ui": {
     "medium1": "Milieu 1",
@@ -21,8 +21,14 @@
     "angles": "Angles",
     "magnitudeE": "Magnitude de E₁",
     "magnitudeH": "Magnitude de H₁",
+    "surfaceChargeTitle": "Charge superficielle",
+    "surfaceCurrentTitle": "Courant surfacique",
+    "sigmaF": "σ_f",
+    "kF": "K_f",
     "equationElectric": "Conditions aux limites E (σ_f = 0)",
     "equationMagnetic": "Conditions aux limites M (K_f = 0)",
+    "equationElectricFree": "Conditions aux limites E (σ_f ≠ 0)",
+    "equationMagneticFree": "Conditions aux limites M (K_f ≠ 0)",
     "labelE1": "E₁",
     "labelE2": "E₂",
     "labelD1": "D₁",
@@ -35,11 +41,11 @@
     "tanRatioMagnetic": "tanθ₂/tanθ₁"
   },
   "a11y": {
-    "intro": {
+    "electric": {
       "screenSummary": {
         "playArea": "La zone de jeu montre deux diélectriques séparés par une interface horizontale, avec les vecteurs E et D dans chaque milieu.",
-        "controlArea": "Les commandes règlent la permittivité relative de chaque milieu, la magnitude de E₁, et des options pour composantes, lignes de champ, rapporteur et angles. Tout réinitialiser restaure l'état initial.",
-        "interactionHint": "Faites glisser la pointe de E₁ pour changer son angle par rapport à la normale, puis ajustez εᵣ et observez quelles composantes restent continues."
+        "controlArea": "Les commandes règlent la permittivité relative de chaque milieu, la charge superficielle libre σ_f, la magnitude de E₁, et des options pour composantes, lignes de champ, rapporteur et angles. Tout réinitialiser restaure l'état initial.",
+        "interactionHint": "Faites glisser la pointe de E₁ pour changer son angle par rapport à la normale, puis ajustez εᵣ ou σ_f et observez quelles composantes restent continues."
       },
       "currentDetails": "Conditions aux limites électriques à une interface plane.",
       "controls": {
@@ -48,14 +54,15 @@
         "eps2": "Permittivité relative du milieu 2",
         "preset1": "Matériau prédéfini du milieu 1",
         "preset2": "Matériau prédéfini du milieu 2",
-        "magnitude": "Magnitude de E₁"
+        "magnitude": "Magnitude de E₁",
+        "surfaceCharge": "Densité de charge libre σ_f à l'interface"
       }
     },
-    "magnetics": {
+    "magnetic": {
       "screenSummary": {
         "playArea": "La zone de jeu montre deux milieux magnétiques séparés par une interface horizontale, avec les vecteurs H et B dans chaque milieu.",
-        "controlArea": "Les commandes règlent la perméabilité relative de chaque milieu, la magnitude de H₁, et des options pour composantes, lignes de champ, rapporteur et angles. Tout réinitialiser restaure l'état initial.",
-        "interactionHint": "Faites glisser la pointe de H₁ pour changer son angle par rapport à la normale, puis ajustez μᵣ et observez quelles composantes restent continues."
+        "controlArea": "Les commandes règlent la perméabilité relative de chaque milieu, le courant surfacique libre K_f, la magnitude de H₁, et des options pour composantes, lignes de champ, rapporteur et angles. Tout réinitialiser restaure l'état initial.",
+        "interactionHint": "Faites glisser la pointe de H₁ pour changer son angle par rapport à la normale, puis ajustez μᵣ ou K_f et observez quelles composantes restent continues."
       },
       "currentDetails": "Conditions aux limites magnétiques à une interface plane.",
       "controls": {
@@ -64,7 +71,8 @@
         "mu2": "Perméabilité relative du milieu 2",
         "preset1": "Matériau prédéfini du milieu 1",
         "preset2": "Matériau prédéfini du milieu 2",
-        "magnitude": "Magnitude de H₁"
+        "magnitude": "Magnitude de H₁",
+        "surfaceCurrent": "Densité de courant libre K_f à l'interface"
       }
     }
   },

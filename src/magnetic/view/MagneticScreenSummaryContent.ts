@@ -1,5 +1,5 @@
 /**
- * MagneticsScreenSummaryContent.ts
+ * MagneticScreenSummaryContent.ts
  *
  * The accessible screen summary read by screen readers (SceneryStack's
  * Interactive Description). It appears at the top of the parallel DOM and gives
@@ -21,13 +21,13 @@
  */
 import { ScreenSummaryContent } from "scenerystack/sim";
 import { StringManager } from "../../i18n/StringManager.js";
-import type { MagneticsModel } from "../model/MagneticsModel.js";
+import type { MagneticModel } from "../model/MagneticModel.js";
 
-export class MagneticsScreenSummaryContent extends ScreenSummaryContent {
+export class MagneticScreenSummaryContent extends ScreenSummaryContent {
   // `model` is unused in the template but kept in the signature so real sims can
   // derive a live currentDetailsContent from it without changing call sites.
-  public constructor(_model: MagneticsModel) {
-    const a11y = StringManager.getInstance().getMagneticsA11yStrings();
+  public constructor(_model: MagneticModel) {
+    const a11y = StringManager.getInstance().getMagneticA11yStrings();
 
     super({
       playAreaContent: a11y.screenSummary.playAreaStringProperty,

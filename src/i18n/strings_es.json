@@ -1,8 +1,8 @@
 {
   "title": "Frontera de campos",
   "screens": {
-    "intro": "Introducción",
-    "magnetics": "Magnéticos"
+    "electric": "Eléctrico",
+    "magnetic": "Magnético"
   },
   "ui": {
     "medium1": "Medio 1",
@@ -21,8 +21,14 @@
     "angles": "Ángulos",
     "magnitudeE": "Magnitud de E₁",
     "magnitudeH": "Magnitud de H₁",
+    "surfaceChargeTitle": "Carga superficial",
+    "surfaceCurrentTitle": "Corriente superficial",
+    "sigmaF": "σ_f",
+    "kF": "K_f",
     "equationElectric": "CC eléctricas (σ_f = 0)",
     "equationMagnetic": "CC magnéticas (K_f = 0)",
+    "equationElectricFree": "CC eléctricas (σ_f ≠ 0)",
+    "equationMagneticFree": "CC magnéticas (K_f ≠ 0)",
     "labelE1": "E₁",
     "labelE2": "E₂",
     "labelD1": "D₁",
@@ -35,11 +41,11 @@
     "tanRatioMagnetic": "tanθ₂/tanθ₁"
   },
   "a11y": {
-    "intro": {
+    "electric": {
       "screenSummary": {
         "playArea": "El área de juego muestra dos medios dieléctricos unidos en una interfaz horizontal, con vectores E y D en cada medio.",
-        "controlArea": "Los controles fijan la permitividad relativa de cada medio, la magnitud de E₁ y opciones de componentes, líneas de campo, transportador y ángulos. Restablecer todo vuelve al estado inicial.",
-        "interactionHint": "Arrastra la punta de E₁ para cambiar su ángulo respecto a la normal, luego ajusta εᵣ y observa qué componentes permanecen continuos."
+        "controlArea": "Los controles fijan la permitividad relativa de cada medio, la carga superficial libre σ_f, la magnitud de E₁ y opciones de componentes, líneas de campo, transportador y ángulos. Restablecer todo vuelve al estado inicial.",
+        "interactionHint": "Arrastra la punta de E₁ para cambiar su ángulo respecto a la normal, luego ajusta εᵣ o σ_f y observa qué componentes permanecen continuos."
       },
       "currentDetails": "Condiciones de frontera eléctricas en una interfaz plana.",
       "controls": {
@@ -48,14 +54,15 @@
         "eps2": "Permitividad relativa del medio 2",
         "preset1": "Material predefinido del medio 1",
         "preset2": "Material predefinido del medio 2",
-        "magnitude": "Magnitud de E₁"
+        "magnitude": "Magnitud de E₁",
+        "surfaceCharge": "Densidad de carga libre σ_f en la interfaz"
       }
     },
-    "magnetics": {
+    "magnetic": {
       "screenSummary": {
         "playArea": "El área de juego muestra dos medios magnéticos unidos en una interfaz horizontal, con vectores H y B en cada medio.",
-        "controlArea": "Los controles fijan la permeabilidad relativa de cada medio, la magnitud de H₁ y opciones de componentes, líneas de campo, transportador y ángulos. Restablecer todo vuelve al estado inicial.",
-        "interactionHint": "Arrastra la punta de H₁ para cambiar su ángulo respecto a la normal, luego ajusta μᵣ y observa qué componentes permanecen continuos."
+        "controlArea": "Los controles fijan la permeabilidad relativa de cada medio, la corriente superficial libre K_f, la magnitud de H₁ y opciones de componentes, líneas de campo, transportador y ángulos. Restablecer todo vuelve al estado inicial.",
+        "interactionHint": "Arrastra la punta de H₁ para cambiar su ángulo respecto a la normal, luego ajusta μᵣ o K_f y observa qué componentes permanecen continuos."
       },
       "currentDetails": "Condiciones de frontera magnéticas en una interfaz plana.",
       "controls": {
@@ -64,7 +71,8 @@
         "mu2": "Permeabilidad relativa del medio 2",
         "preset1": "Material predefinido del medio 1",
         "preset2": "Material predefinido del medio 2",
-        "magnitude": "Magnitud de H₁"
+        "magnitude": "Magnitud de H₁",
+        "surfaceCurrent": "Densidad de corriente libre K_f en la interfaz"
       }
     }
   },

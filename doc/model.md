@@ -1,7 +1,8 @@
 # Model — Field Boundary
 
-Planar interface between two linear isotropic media. Static fields only;
-no free surface charge or free surface current.
+Planar interface between two linear isotropic media. Static fields; optional
+free surface charge (σ_f, Electric screen) and free surface current (K_f,
+Magnetic screen). Both default to 0 (source-free).
 
 ## Coordinates
 
@@ -10,36 +11,58 @@ no free surface charge or free surface current.
 - Primary angle \(\theta\) is measured from \(\hat{n}\) toward \(+\hat{x}\):
   \(E_t = |E|\sin\theta\), \(E_n = |E|\cos\theta\).
 
-## Electric (Intro)
+## Electric
 
-With \(\sigma_f=0\) and \(\varepsilon=\varepsilon_r\) (\(\varepsilon_0=1\)):
+With \(\varepsilon=\varepsilon_r\) (\(\varepsilon_0=1\)) and free surface charge
+density \(\sigma_f\) on the interface:
 
 \[
 E_{2t}=E_{1t},\qquad
-E_{2n}=\frac{\varepsilon_1}{\varepsilon_2}E_{1n},\qquad
+\varepsilon_1 E_{1n}-\varepsilon_2 E_{2n}=\sigma_f
+\;\;\Rightarrow\;\;
+E_{2n}=\frac{\varepsilon_1 E_{1n}-\sigma_f}{\varepsilon_2},\qquad
 \vec{D}_i=\varepsilon_i\vec{E}_i.
 \]
 
-Hence \(D_{1n}=D_{2n}\) and \(D_{2t}/D_{1t}=\varepsilon_2/\varepsilon_1\).
+With \(\sigma_f=0\): \(D_{1n}=D_{2n}\) and \(D_{2t}/D_{1t}=\varepsilon_2/\varepsilon_1\).
+With \(\sigma_f\ne 0\): \(D_{1n}-D_{2n}=\sigma_f\); large positive \(\sigma_f\) can
+reverse \(E_{2n}\) so the medium-2 field points away from medium 1.
 
 Field-line angles from the normal satisfy
 
 \[
-\frac{\tan\theta_2}{\tan\theta_1}=\frac{\varepsilon_2}{\varepsilon_1}.
+\frac{\tan\theta_2}{\tan\theta_1}=\frac{\varepsilon_2 E_{1n}}{\varepsilon_1 E_{1n}-\sigma_f},
 \]
 
-## Magnetic (Magnetics)
+which reduces to \(\varepsilon_2/\varepsilon_1\) when \(\sigma_f=0\).
 
-With \(K_f=0\) and \(\mu=\mu_r\) (\(\mu_0=1\)):
+## Magnetic
+
+With \(\mu=\mu_r\) (\(\mu_0=1\)) and free surface current density \(K_f\) along
+\(+\hat z\) (out of the t–n page):
 
 \[
-H_{2t}=H_{1t},\qquad
-H_{2n}=\frac{\mu_1}{\mu_2}H_{1n},\qquad
+\hat n\times(\vec H_1-\vec H_2)=K_f\hat z
+\;\;\Rightarrow\;\;
+H_{2t}=H_{1t}+K_f,\qquad
+B_{1n}=B_{2n}\;\;\Rightarrow\;\;H_{2n}=\frac{\mu_1}{\mu_2}H_{1n},\qquad
 \vec{B}_i=\mu_i\vec{H}_i.
 \]
 
+With \(K_f=0\): \(H_{1t}=H_{2t}\). Positive \(K_f\) (⊙, out of page) increases
+\(H_{2t}\); negative \(K_f\) (⊗, into page) decreases it.
+
 ## Display
 
-Medium-2 physics vectors \((F_t,F_n)\) are drawn as \((F_t,-F_n)\) so the tip
-lies in the lower half-plane. Companion \(\vec{D}\) or \(\vec{B}\) arrows are
-auto-scaled relative to the primary so large \(\varepsilon_r\)/\(\mu_r\) stay on-screen.
+Fields are continuous across the boundary: a medium-2 physics vector
+\((F_t,F_n)\) with \(F_n>0\) points toward \(+\hat n\) (up, into medium 1), the
+same direction as medium 1. It is drawn in the lower half-plane by anchoring its
+tip at the interface and its tail at \((-F_t,-F_n)\), so for equal media the two
+arrows are parallel and form one straight field line. Field lines are likewise
+continuous (straight when \(\varepsilon_1=\varepsilon_2\), kinked otherwise).
+Companion \(\vec{D}\) or \(\vec{B}\) arrows are auto-scaled relative to the
+primary so large \(\varepsilon_r\)/\(\mu_r\) stay on-screen. Component-axis
+overlays still reflect medium-2 magnitudes into the lower half-plane via
+`medium2DisplayVector` to compare \(|E_n|\)/\(|D_n|\) across the interface.
+Free surface sources are drawn on the interface: \(+\)/\(-\) markers for
+\(\sigma_f\), and ⊙/⊗ markers for \(K_f\) (out of / into the page).

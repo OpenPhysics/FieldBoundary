@@ -77,23 +77,23 @@ export class StringManager {
    * Each property updates automatically when the locale changes.
    */
   public getScreenNames(): {
-    readonly introStringProperty: ReadOnlyProperty<string>;
-    readonly magneticsStringProperty: ReadOnlyProperty<string>;
+    readonly electricStringProperty: ReadOnlyProperty<string>;
+    readonly magneticStringProperty: ReadOnlyProperty<string>;
   } {
     return {
-      introStringProperty: stringProperties.screens.introStringProperty,
-      magneticsStringProperty: stringProperties.screens.magneticsStringProperty,
+      electricStringProperty: stringProperties.screens.electricStringProperty,
+      magneticStringProperty: stringProperties.screens.magneticStringProperty,
     };
   }
 
-  /** Accessibility strings for the Intro screen. */
-  public getIntroA11yStrings() {
-    return stringProperties.a11y.intro;
+  /** Accessibility strings for the Electric screen. */
+  public getElectricA11yStrings() {
+    return stringProperties.a11y.electric;
   }
 
-  /** Accessibility strings for the Magnetics screen. */
-  public getMagneticsA11yStrings() {
-    return stringProperties.a11y.magnetics;
+  /** Accessibility strings for the Magnetic screen. */
+  public getMagneticA11yStrings() {
+    return stringProperties.a11y.magnetic;
   }
 
   /** Shared UI chrome labels (panels, vector tags, equations). */

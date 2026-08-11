@@ -1,8 +1,9 @@
 /**
  * interfaceFields.ts
  *
- * Pure Maxwell planar-interface helpers (no free surface charge/current).
- * Uses relative εᵣ / μᵣ with ε₀ = μ₀ = 1 in sim units.
+ * Pure Maxwell planar-interface helpers. Supports optional free surface charge
+ * (σ_f) and free surface current (K_f). Uses relative εᵣ / μᵣ with ε₀ = μ₀ = 1
+ * in sim units.
  *
  * Convention: n̂ = +ŷ points from medium 2 into medium 1. Tangential = x.
  * Primary angle θ is measured from n̂ toward +x̂ (atan2(Et, En)).
@@ -27,13 +28,21 @@ export function clampAngle(angle: number): number {
 }
 
 /**
- * Electric BC with σ_f = 0:
- *   E₂ₜ = E₁ₜ
- *   E₂ₙ = (ε₁ / ε₂) E₁ₙ
+ * Electric BC with free surface charge density σ_f on the interface:
+ *   E₂ₜ = E₁ₜ                          (tangential E always continuous)
+ *   ε₁E₁ₙ − ε₂E₂ₙ = σ_f                (Dₙ − σ_f jump; n̂ from medium 2 → 1)
+ *   E₂ₙ = (ε₁E₁ₙ − σ_f) / ε₂
  *   Dᵢ = εᵢ Eᵢ
+ *
+ * σ_f defaults to 0, recovering the source-free BC E₂ₙ = (ε₁/ε₂)E₁ₙ.
  */
-export function refractElectric(e1: Vector2, eps1: number, eps2: number): { e2: Vector2; d1: Vector2; d2: Vector2 } {
-  const e2 = new Vector2(e1.x, e1.y * (eps1 / eps2));
+export function refractElectric(
+  e1: Vector2,
+  eps1: number,
+  eps2: number,
+  sigmaF = 0,
+): { e2: Vector2; d1: Vector2; d2: Vector2 } {
+  const e2 = new Vector2(e1.x, (e1.y * eps1 - sigmaF) / eps2);
   return {
     e2,
     d1: e1.timesScalar(eps1),
@@ -42,13 +51,22 @@ export function refractElectric(e1: Vector2, eps1: number, eps2: number): { e2: 
 }
 
 /**
- * Magnetic BC with K_f = 0:
- *   H₂ₜ = H₁ₜ
+ * Magnetic BC with free surface current density K_f (scalar along +ẑ, out of
+ * the t–n page). With n̂ = +ŷ (from medium 2 into medium 1):
+ *   n̂ × (H₁ − H₂) = K_f ẑ   ⇒   H₂ₜ = H₁ₜ + K_f
+ *   B₁ₙ = B₂ₙ                (normal B always continuous)
  *   H₂ₙ = (μ₁ / μ₂) H₁ₙ
  *   Bᵢ = μᵢ Hᵢ
+ *
+ * K_f defaults to 0, recovering the source-free BC H₂ₜ = H₁ₜ.
  */
-export function refractMagnetic(h1: Vector2, mu1: number, mu2: number): { h2: Vector2; b1: Vector2; b2: Vector2 } {
-  const h2 = new Vector2(h1.x, h1.y * (mu1 / mu2));
+export function refractMagnetic(
+  h1: Vector2,
+  mu1: number,
+  mu2: number,
+  surfaceCurrent = 0,
+): { h2: Vector2; b1: Vector2; b2: Vector2 } {
+  const h2 = new Vector2(h1.x + surfaceCurrent, (h1.y * mu1) / mu2);
   return {
     h2,
     b1: h1.timesScalar(mu1),
@@ -57,8 +75,13 @@ export function refractMagnetic(h1: Vector2, mu1: number, mu2: number): { h2: Ve
 }
 
 /**
- * Display tip for a medium-2 physics vector (Et, En): flip the normal so the
- * arrow is drawn into the lower half-plane while preserving Et and |En|.
+ * Reflect a medium-2 physics vector (Et, En) across the interface into the lower
+ * half-plane as (Et, -En). Used only by component-axis overlays that project
+ * component magnitudes onto the t/n axes on each side of the boundary.
+ *
+ * NOT used for field arrows or field lines: those anchor medium-2 vectors with
+ * their tip at the interface so the field reads as continuous (pointing toward
+ * +n̂), matching medium 1 — see BoundaryVectorsNode / FieldLinesNode.
  */
 export function medium2DisplayVector(physics: Vector2): Vector2 {
   return new Vector2(physics.x, -physics.y);

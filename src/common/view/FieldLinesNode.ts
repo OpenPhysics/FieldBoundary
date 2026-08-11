@@ -10,7 +10,6 @@ import type { ModelViewTransform2 } from "scenerystack/phetcommon";
 import { CanvasNode } from "scenerystack/scenery";
 import FieldBoundaryColors from "../../FieldBoundaryColors.js";
 import { FIELD_LINE_COUNT, MODEL_HALF_HEIGHT, MODEL_HALF_WIDTH } from "../../FieldBoundaryConstants.js";
-import { medium2DisplayVector } from "../model/interfaceFields.js";
 
 export class FieldLinesNode extends CanvasNode {
   private readonly modelViewTransform: ModelViewTransform2;
@@ -42,7 +41,11 @@ export class FieldLinesNode extends CanvasNode {
     }
 
     const dir1 = p1.normalized();
-    const dir2 = medium2DisplayVector(p2).normalized();
+    // Medium-2 field lines share the physics direction (pointing toward +n̂), so
+    // they are continuous with medium 1 across the interface (straight for equal
+    // media, kinked when ε₁≠ε₂). clipRay handles drawing the segment into the
+    // lower half-plane from this direction.
+    const dir2 = p2.normalized();
     const mvt = this.modelViewTransform;
 
     context.strokeStyle = FieldBoundaryColors.fieldLineColorProperty.value.toCSS();

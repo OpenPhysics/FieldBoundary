@@ -1,5 +1,5 @@
 /**
- * IntroScreenView.ts
+ * ElectricScreenView.ts
  *
  * Electric interface play area + media/tools controls.
  */
@@ -15,6 +15,8 @@ import { BoundaryVectorsNode } from "../../common/view/BoundaryVectorsNode.js";
 import { ComponentOverlayNode } from "../../common/view/ComponentOverlayNode.js";
 import { EquationStripNode } from "../../common/view/EquationStripNode.js";
 import { FieldLinesNode } from "../../common/view/FieldLinesNode.js";
+import { FreeSourceControlPanel } from "../../common/view/FreeSourceControlPanel.js";
+import { FreeSourceOverlayNode } from "../../common/view/FreeSourceOverlayNode.js";
 import { InterfaceBackgroundNode } from "../../common/view/InterfaceBackgroundNode.js";
 import { MagnitudeControlPanel } from "../../common/view/MagnitudeControlPanel.js";
 import { MediaControlPanel } from "../../common/view/MediaControlPanel.js";
@@ -25,25 +27,26 @@ import {
   MODEL_HALF_WIDTH,
   PLAY_AREA_RIGHT_GUTTER,
   SCREEN_VIEW_MARGIN,
+  SURFACE_CHARGE_RANGE,
 } from "../../FieldBoundaryConstants.js";
 import { StringManager } from "../../i18n/StringManager.js";
-import type { IntroModel } from "../model/IntroModel.js";
-import { IntroScreenSummaryContent } from "./IntroScreenSummaryContent.js";
+import type { ElectricModel } from "../model/ElectricModel.js";
+import { ElectricScreenSummaryContent } from "./ElectricScreenSummaryContent.js";
 
-export type IntroScreenViewOptions = ScreenViewOptions;
+export type ElectricScreenViewOptions = ScreenViewOptions;
 
-export class IntroScreenView extends ScreenView {
-  public constructor(model: IntroModel, providedOptions?: IntroScreenViewOptions) {
-    const options = optionize<IntroScreenViewOptions, EmptySelfOptions, ScreenViewOptions>()(
+export class ElectricScreenView extends ScreenView {
+  public constructor(model: ElectricModel, providedOptions?: ElectricScreenViewOptions) {
+    const options = optionize<ElectricScreenViewOptions, EmptySelfOptions, ScreenViewOptions>()(
       {
-        screenSummaryContent: new IntroScreenSummaryContent(model),
+        screenSummaryContent: new ElectricScreenSummaryContent(model),
       },
       providedOptions,
     );
     super(options);
 
     const ui = StringManager.getInstance().getUiStrings();
-    const a11y = StringManager.getInstance().getIntroA11yStrings();
+    const a11y = StringManager.getInstance().getElectricA11yStrings();
 
     const backgroundRect = new Rectangle(0, 0, this.layoutBounds.width, this.layoutBounds.height, {
       fill: FieldBoundaryColors.backgroundColorProperty,
@@ -86,7 +89,13 @@ export class IntroScreenView extends ScreenView {
         model.e2Property,
         model.d1Property,
         model.d2Property,
+        model.surfaceChargeProperty,
       ),
+    );
+
+    // Above field lines / dashed interface so +/− glyphs stay readable.
+    playLayer.addChild(
+      new FreeSourceOverlayNode(modelViewTransform, "electric", model.surfaceChargeProperty, SURFACE_CHARGE_RANGE.max),
     );
 
     const vectors = new BoundaryVectorsNode(modelViewTransform, {
@@ -145,6 +154,8 @@ export class IntroScreenView extends ScreenView {
       "electric",
       model.shared.showComponentsProperty,
       ui.equationElectricStringProperty,
+      ui.equationElectricFreeStringProperty,
+      model.surfaceChargeProperty,
     );
     equationStrip.centerX = playBounds.centerX;
     equationStrip.top = SCREEN_VIEW_MARGIN;
@@ -205,6 +216,17 @@ export class IntroScreenView extends ScreenView {
     magnitudePanel.top = medium2Panel.bottom + 10;
     this.addChild(magnitudePanel);
 
+    const freeSourcePanel = new FreeSourceControlPanel(
+      model.surfaceChargeProperty,
+      SURFACE_CHARGE_RANGE,
+      ui.surfaceChargeTitleStringProperty,
+      ui.sigmaFStringProperty,
+      a11y.controls.surfaceChargeStringProperty,
+    );
+    freeSourcePanel.left = controlsLeft;
+    freeSourcePanel.top = magnitudePanel.bottom + 10;
+    this.addChild(freeSourcePanel);
+
     const toolsPanel = new ToolsControlPanel(model.shared, {
       title: ui.toolsStringProperty,
       components: ui.componentsStringProperty,
@@ -213,7 +235,7 @@ export class IntroScreenView extends ScreenView {
       angles: ui.anglesStringProperty,
     });
     toolsPanel.left = controlsLeft;
-    toolsPanel.top = magnitudePanel.bottom + 10;
+    toolsPanel.top = freeSourcePanel.bottom + 10;
     this.addChild(toolsPanel);
 
     // Combo lists above panels
@@ -232,7 +254,15 @@ export class IntroScreenView extends ScreenView {
 
     this.addChild(
       new Node({
-        pdomOrder: [vectors.dragHandle, medium1Panel, medium2Panel, magnitudePanel, toolsPanel, resetAllButton],
+        pdomOrder: [
+          vectors.dragHandle,
+          medium1Panel,
+          medium2Panel,
+          magnitudePanel,
+          freeSourcePanel,
+          toolsPanel,
+          resetAllButton,
+        ],
       }),
     );
   }

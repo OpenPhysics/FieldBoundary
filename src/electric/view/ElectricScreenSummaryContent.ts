@@ -1,5 +1,5 @@
 /**
- * IntroScreenSummaryContent.ts
+ * ElectricScreenSummaryContent.ts
  *
  * The accessible screen summary read by screen readers (SceneryStack's
  * Interactive Description). It appears at the top of the parallel DOM and gives
@@ -21,13 +21,13 @@
  */
 import { ScreenSummaryContent } from "scenerystack/sim";
 import { StringManager } from "../../i18n/StringManager.js";
-import type { IntroModel } from "../model/IntroModel.js";
+import type { ElectricModel } from "../model/ElectricModel.js";
 
-export class IntroScreenSummaryContent extends ScreenSummaryContent {
+export class ElectricScreenSummaryContent extends ScreenSummaryContent {
   // `model` is unused in the template but kept in the signature so real sims can
   // derive a live currentDetailsContent from it without changing call sites.
-  public constructor(_model: IntroModel) {
-    const a11y = StringManager.getInstance().getIntroA11yStrings();
+  public constructor(_model: ElectricModel) {
+    const a11y = StringManager.getInstance().getElectricA11yStrings();
 
     super({
       playAreaContent: a11y.screenSummary.playAreaStringProperty,

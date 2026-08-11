@@ -1,5 +1,5 @@
 /**
- * IntroModel.ts
+ * ElectricModel.ts
  *
  * Electric interface: drag E₁ angle/magnitude; derive E₂, D₁, D₂ from εᵣ.
  */
@@ -14,10 +14,12 @@ import {
   DEFAULT_EPS2,
   DEFAULT_FIELD_ANGLE,
   DEFAULT_FIELD_MAGNITUDE,
+  DEFAULT_SURFACE_CHARGE,
   RELATIVE_PARAMETER_RANGE,
+  SURFACE_CHARGE_RANGE,
 } from "../../FieldBoundaryConstants.js";
 
-export class IntroModel implements TModel {
+export class ElectricModel implements TModel {
   public readonly shared = new SharedModel();
 
   public readonly eps1Property = new NumberProperty(DEFAULT_EPS1, {
@@ -25,6 +27,11 @@ export class IntroModel implements TModel {
   });
   public readonly eps2Property = new NumberProperty(DEFAULT_EPS2, {
     range: RELATIVE_PARAMETER_RANGE,
+  });
+
+  /** Free surface charge density σ_f on the interface (default: none). */
+  public readonly surfaceChargeProperty = new NumberProperty(DEFAULT_SURFACE_CHARGE, {
+    range: SURFACE_CHARGE_RANGE,
   });
 
   public readonly medium1PresetProperty = new StringProperty("vacuum") as Property<MaterialPresetId>;
@@ -42,10 +49,16 @@ export class IntroModel implements TModel {
 
   public constructor() {
     Multilink.multilink(
-      [this.e1AngleProperty, this.e1MagnitudeProperty, this.eps1Property, this.eps2Property],
-      (angle, magnitude, eps1, eps2) => {
+      [
+        this.e1AngleProperty,
+        this.e1MagnitudeProperty,
+        this.eps1Property,
+        this.eps2Property,
+        this.surfaceChargeProperty,
+      ],
+      (angle, magnitude, eps1, eps2, sigmaF) => {
         const e1 = fieldFromPolar(magnitude, angle);
-        const refracted = refractElectric(e1, eps1, eps2);
+        const refracted = refractElectric(e1, eps1, eps2, sigmaF);
         this.e1Property.value = e1;
         this.e2Property.value = refracted.e2;
         this.d1Property.value = refracted.d1;
@@ -105,6 +118,7 @@ export class IntroModel implements TModel {
     this.shared.reset();
     this.eps1Property.reset();
     this.eps2Property.reset();
+    this.surfaceChargeProperty.reset();
     this.medium1PresetProperty.reset();
     this.medium2PresetProperty.reset();
     this.e1AngleProperty.reset();

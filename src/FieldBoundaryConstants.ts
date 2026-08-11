@@ -49,6 +49,25 @@ export const DEFAULT_EPS2 = 4;
 export const DEFAULT_MU1 = 1;
 export const DEFAULT_MU2 = 4;
 
+/** Default free surface charge density σ_f (no free charge). */
+export const DEFAULT_SURFACE_CHARGE = 0;
+
+/** Default free surface current density K_f (no free current). */
+export const DEFAULT_SURFACE_CURRENT = 0;
+
+/**
+ * Free surface charge density σ_f slider range. Comparable to typical Dₙ
+ * magnitudes so the discontinuity is visible; large positive σ_f can reverse
+ * E₂ₙ (the medium-2 field then points away from medium 1).
+ */
+export const SURFACE_CHARGE_RANGE = new Range(-2, 2);
+
+/**
+ * Free surface current density K_f slider range (K_f along +ẑ, out of page).
+ * Comparable to typical Hₜ magnitudes so the tangential H jump is visible.
+ */
+export const SURFACE_CURRENT_RANGE = new Range(-2, 2);
+
 /** Number of field lines drawn when the lattice toggle is on. */
 export const FIELD_LINE_COUNT = 9;
 
@@ -73,5 +92,9 @@ FieldBoundaryNamespace.register("FieldBoundaryConstants", {
   DEFAULT_EPS2,
   DEFAULT_MU1,
   DEFAULT_MU2,
+  DEFAULT_SURFACE_CHARGE,
+  DEFAULT_SURFACE_CURRENT,
+  SURFACE_CHARGE_RANGE,
+  SURFACE_CURRENT_RANGE,
   FIELD_LINE_COUNT,
 });

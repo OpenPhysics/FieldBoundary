@@ -17,7 +17,6 @@ import {
   ARROW_TAIL_WIDTH,
   COMPANION_ARROW_TAIL_WIDTH,
 } from "../../FieldBoundaryConstants.js";
-import { medium2DisplayVector } from "../model/interfaceFields.js";
 
 export type BoundaryVectorsNodeOptions = {
   primaryProperty: TReadOnlyProperty<Vector2>;
@@ -120,6 +119,17 @@ export class BoundaryVectorsNode extends Node {
       return tipView;
     };
 
+    // Medium-2 fields physically point toward +n̂ (up, into medium 1) so the field
+    // is continuous across the boundary. To draw them in the lower half-plane we
+    // anchor the tip at the interface and put the tail at the negated physics
+    // vector; the arrow then points along the field, matching medium 1. For equal
+    // media the two arrows are parallel, forming one continuous field line.
+    const setArrowMedium2 = (arrow: ArrowNode, physics: Vector2): Vector2 => {
+      const tailView = modelViewTransform.modelToViewPosition(physics.timesScalar(-1));
+      arrow.setTailAndTip(tailView.x, tailView.y, originView.x, originView.y);
+      return tailView;
+    };
+
     const update = (): void => {
       const p1 = options.primaryProperty.value;
       const c1 = options.companionProperty.value;
@@ -129,14 +139,14 @@ export class BoundaryVectorsNode extends Node {
 
       const tipP1 = setArrow(primary1, p1);
       const tipC1 = setArrow(companion1, c1.timesScalar(scale));
-      const tipP2 = setArrow(primary2, medium2DisplayVector(p2));
-      const tipC2 = setArrow(companion2, medium2DisplayVector(c2.timesScalar(scale)));
+      const tailP2 = setArrowMedium2(primary2, p2);
+      const tailC2 = setArrowMedium2(companion2, c2.timesScalar(scale));
 
       knob.center = tipP1;
       p1Label.leftBottom = tipP1.plusXY(12, -4);
       c1Label.leftTop = tipC1.plusXY(12, 4);
-      p2Label.leftTop = tipP2.plusXY(12, 4);
-      c2Label.leftBottom = tipC2.plusXY(12, -4);
+      p2Label.leftTop = tailP2.plusXY(12, 4);
+      c2Label.leftBottom = tailC2.plusXY(12, -4);
     };
 
     Multilink.multilink(

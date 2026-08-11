@@ -1,5 +1,5 @@
 /**
- * MagneticsKeyboardHelpContent.ts
+ * ElectricKeyboardHelpContent.ts
  *
  * Content for the keyboard-help dialog (the "?" button in the navigation bar).
  * The template's only interactions are buttons and Reset All, so a single
@@ -9,7 +9,7 @@
 
 import { BasicActionsKeyboardHelpSection, TwoColumnKeyboardHelpContent } from "scenerystack/scenery-phet";
 
-export class MagneticsKeyboardHelpContent extends TwoColumnKeyboardHelpContent {
+export class ElectricKeyboardHelpContent extends TwoColumnKeyboardHelpContent {
   public constructor() {
     super([new BasicActionsKeyboardHelpSection()], []);
   }

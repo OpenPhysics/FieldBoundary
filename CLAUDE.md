@@ -18,8 +18,8 @@ Physics notes: `doc/model.md`. Architecture: `doc/implementation-notes.md`.
 
 | Screen | Primary | Companion | Material param |
 |---|---|---|---|
-| Intro | \(\vec{E}\) | \(\vec{D}=\varepsilon_r\vec{E}\) | \(\varepsilon_r\) |
-| Magnetics | \(\vec{H}\) | \(\vec{B}=\mu_r\vec{H}\) | \(\mu_r\) |
+| Electric | \(\vec{E}\) | \(\vec{D}=\varepsilon_r\vec{E}\) | \(\varepsilon_r\) |
+| Magnetic | \(\vec{H}\) | \(\vec{B}=\mu_r\vec{H}\) | \(\mu_r\) |
 
 ## Key files
 
@@ -27,9 +27,9 @@ Physics notes: `doc/model.md`. Architecture: `doc/implementation-notes.md`.
 |---|---|
 | Shared BC math | `src/common/model/interfaceFields.ts` |
 | Tool toggles | `src/common/model/SharedModel.ts` |
-| Intro model / view | `src/intro/model/IntroModel.ts`, `src/intro/view/IntroScreenView.ts` |
-| Magnetics model / view | `src/magnetics/model/MagneticsModel.ts`, `src/magnetics/view/MagneticsScreenView.ts` |
-| Play-area nodes | `src/common/view/` (`InterfaceBackgroundNode`, `BoundaryVectorsNode`, `ComponentOverlayNode`, `FieldLinesNode`, …) |
+| Electric model / view | `src/electric/model/ElectricModel.ts`, `src/electric/view/ElectricScreenView.ts` |
+| Magnetic model / view | `src/magnetic/model/MagneticModel.ts`, `src/magnetic/view/MagneticScreenView.ts` |
+| Play-area nodes | `src/common/view/` (`InterfaceBackgroundNode`, `BoundaryVectorsNode`, `ComponentOverlayNode`, `FieldLinesNode`, `FreeSourceOverlayNode`, `FreeSourceControlPanel`, …) |
 | Colors / strings | `FieldBoundaryColors.ts`, `src/i18n/StringManager.ts` |
 
 ## Model conventions
@@ -37,17 +37,17 @@ Physics notes: `doc/model.md`. Architecture: `doc/implementation-notes.md`.
 - \(\varepsilon_0=\mu_0=1\) in sim units; UI exposes relative \(\varepsilon_r\), \(\mu_r\).
 - \(\hat{n}=+\hat{y}\) from medium 2 into medium 1; tangential = \(x\).
 - Angle \(\theta\) of the primary field is from the normal: \(\tan\theta=E_t/E_n\).
-- Medium-2 arrows are drawn with a flipped normal (`medium2DisplayVector`) so tips lie in the lower half-plane while physics components stay \((E_t,E_n)\).
-- No free surface charge/current in v1 (\(\sigma_f=0\), \(K_f=0\)).
+- Medium-2 fields are continuous with medium 1 (point toward \(+\hat{n}\)); drawn in the lower half-plane by anchoring the arrow tip at the interface and the tail at \((-E_t,-E_n)\). For equal media the two arrows are parallel. `medium2DisplayVector` is used only by component-axis overlays.
+- Free surface charge \(\sigma_f\) (Electric) and free surface current \(K_f\) (Magnetic, along \(+\hat{z}\)) are adjustable on the interface and default to 0. With \(\sigma_f\ne 0\): \(D_{1n}-D_{2n}=\sigma_f\) (Dₙ discontinuous). With \(K_f\ne 0\): \(H_{2t}-H_{1t}=K_f\) (Hₜ discontinuous). The equation strip and component-overlay highlighting switch to reflect the sourced BC.
 
-### Boundary conditions (v1)
+### Boundary conditions
 
 ```
 E₂ₜ = E₁ₜ
-E₂ₙ = (ε₁ / ε₂) E₁ₙ
+ε₁E₁ₙ − ε₂E₂ₙ = σ_f        (σ_f = 0 ⇒ E₂ₙ = (ε₁/ε₂) E₁ₙ)
 Dᵢ = εᵢ Eᵢ
 
-H₂ₜ = H₁ₜ
+H₂ₜ = H₁ₜ + K_f             (K_f along +ẑ; K_f = 0 ⇒ H₂ₜ = H₁ₜ)
 H₂ₙ = (μ₁ / μ₂) H₁ₙ
 Bᵢ = μᵢ Hᵢ
 ```
@@ -66,4 +66,4 @@ npm test
 
 ## Non-goals (v1)
 
-Optical rays / Fresnel / TIR; free \(\sigma_f\)/\(K_f\); curved interfaces; time-harmonic waves.
+Optical rays / Fresnel / TIR; curved interfaces; time-harmonic waves.

@@ -1,43 +1,43 @@
 /**
- * IntroScreen.ts
+ * ElectricScreen.ts
  *
  * The top-level Screen component. It wires together the model and view
  * factories and passes screen-level options (name, background color, tandem)
  * to the parent Screen class.
  *
  * Registered in the screens array in src/main.ts. Its home-screen and navigation-bar
- * icons come from createIntroIcon() in src/common/FieldBoundaryScreenIcons.ts
+ * icons come from createElectricIcon() in src/common/FieldBoundaryScreenIcons.ts
  * (see doc/multi-screen.md).
  */
 import { type EmptySelfOptions, optionize } from "scenerystack/phet-core";
 import type { ScreenOptions } from "scenerystack/sim";
 import { Screen } from "scenerystack/sim";
 import type { Tandem } from "scenerystack/tandem";
-import { createIntroIcon } from "../common/FieldBoundaryScreenIcons.js";
+import { createElectricIcon } from "../common/FieldBoundaryScreenIcons.js";
 import FieldBoundaryColors from "../FieldBoundaryColors.js";
-import { IntroModel } from "./model/IntroModel.js";
-import { IntroKeyboardHelpContent } from "./view/IntroKeyboardHelpContent.js";
-import { IntroScreenView } from "./view/IntroScreenView.js";
+import { ElectricModel } from "./model/ElectricModel.js";
+import { ElectricKeyboardHelpContent } from "./view/ElectricKeyboardHelpContent.js";
+import { ElectricScreenView } from "./view/ElectricScreenView.js";
 
 // Require tandem to be explicit — accidental omission would break PhET-iO.
-type IntroScreenOptions = ScreenOptions & { tandem: Tandem };
+type ElectricScreenOptions = ScreenOptions & { tandem: Tandem };
 
-export class IntroScreen extends Screen<IntroModel, IntroScreenView> {
-  public constructor(options: IntroScreenOptions) {
+export class ElectricScreen extends Screen<ElectricModel, ElectricScreenView> {
+  public constructor(options: ElectricScreenOptions) {
     super(
       // Model factory — called once when the screen is first shown
-      () => new IntroModel(),
+      () => new ElectricModel(),
       // View factory — receives the model instance
       (model) =>
-        new IntroScreenView(model, {
+        new ElectricScreenView(model, {
           tandem: options.tandem.createTandem("view"),
         }),
-      optionize<IntroScreenOptions, EmptySelfOptions, ScreenOptions>()(
+      optionize<ElectricScreenOptions, EmptySelfOptions, ScreenOptions>()(
         {
           backgroundColorProperty: FieldBoundaryColors.backgroundColorProperty,
-          createKeyboardHelpNode: () => new IntroKeyboardHelpContent(),
-          homeScreenIcon: createIntroIcon(),
-          navigationBarIcon: createIntroIcon(),
+          createKeyboardHelpNode: () => new ElectricKeyboardHelpContent(),
+          homeScreenIcon: createElectricIcon(),
+          navigationBarIcon: createElectricIcon(),
         },
         options,
       ),

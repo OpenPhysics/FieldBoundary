@@ -1,7 +1,7 @@
 /**
- * MagneticsScreenView.ts
+ * MagneticScreenView.ts
  *
- * Magnetic interface play area + media/tools controls (mirrors Intro).
+ * Magnetic interface play area + media/tools controls (mirrors Electric).
  */
 import { Bounds2, Vector2 } from "scenerystack/dot";
 import { type EmptySelfOptions, optionize } from "scenerystack/phet-core";
@@ -15,6 +15,8 @@ import { BoundaryVectorsNode } from "../../common/view/BoundaryVectorsNode.js";
 import { ComponentOverlayNode } from "../../common/view/ComponentOverlayNode.js";
 import { EquationStripNode } from "../../common/view/EquationStripNode.js";
 import { FieldLinesNode } from "../../common/view/FieldLinesNode.js";
+import { FreeSourceControlPanel } from "../../common/view/FreeSourceControlPanel.js";
+import { FreeSourceOverlayNode } from "../../common/view/FreeSourceOverlayNode.js";
 import { InterfaceBackgroundNode } from "../../common/view/InterfaceBackgroundNode.js";
 import { MagnitudeControlPanel } from "../../common/view/MagnitudeControlPanel.js";
 import { MediaControlPanel } from "../../common/view/MediaControlPanel.js";
@@ -25,25 +27,26 @@ import {
   MODEL_HALF_WIDTH,
   PLAY_AREA_RIGHT_GUTTER,
   SCREEN_VIEW_MARGIN,
+  SURFACE_CURRENT_RANGE,
 } from "../../FieldBoundaryConstants.js";
 import { StringManager } from "../../i18n/StringManager.js";
-import type { MagneticsModel } from "../model/MagneticsModel.js";
-import { MagneticsScreenSummaryContent } from "./MagneticsScreenSummaryContent.js";
+import type { MagneticModel } from "../model/MagneticModel.js";
+import { MagneticScreenSummaryContent } from "./MagneticScreenSummaryContent.js";
 
-export type MagneticsScreenViewOptions = ScreenViewOptions;
+export type MagneticScreenViewOptions = ScreenViewOptions;
 
-export class MagneticsScreenView extends ScreenView {
-  public constructor(model: MagneticsModel, providedOptions?: MagneticsScreenViewOptions) {
-    const options = optionize<MagneticsScreenViewOptions, EmptySelfOptions, ScreenViewOptions>()(
+export class MagneticScreenView extends ScreenView {
+  public constructor(model: MagneticModel, providedOptions?: MagneticScreenViewOptions) {
+    const options = optionize<MagneticScreenViewOptions, EmptySelfOptions, ScreenViewOptions>()(
       {
-        screenSummaryContent: new MagneticsScreenSummaryContent(model),
+        screenSummaryContent: new MagneticScreenSummaryContent(model),
       },
       providedOptions,
     );
     super(options);
 
     const ui = StringManager.getInstance().getUiStrings();
-    const a11y = StringManager.getInstance().getMagneticsA11yStrings();
+    const a11y = StringManager.getInstance().getMagneticA11yStrings();
 
     const backgroundRect = new Rectangle(0, 0, this.layoutBounds.width, this.layoutBounds.height, {
       fill: FieldBoundaryColors.backgroundColorProperty,
@@ -87,6 +90,17 @@ export class MagneticsScreenView extends ScreenView {
         model.h2Property,
         model.b1Property,
         model.b2Property,
+        model.surfaceCurrentProperty,
+      ),
+    );
+
+    // Above field lines / dashed interface so ⊙/⊗ glyphs stay readable.
+    playLayer.addChild(
+      new FreeSourceOverlayNode(
+        modelViewTransform,
+        "magnetic",
+        model.surfaceCurrentProperty,
+        SURFACE_CURRENT_RANGE.max,
       ),
     );
 
@@ -148,6 +162,8 @@ export class MagneticsScreenView extends ScreenView {
       "magnetic",
       model.shared.showComponentsProperty,
       ui.equationMagneticStringProperty,
+      ui.equationMagneticFreeStringProperty,
+      model.surfaceCurrentProperty,
     );
     equationStrip.centerX = playBounds.centerX;
     equationStrip.top = SCREEN_VIEW_MARGIN;
@@ -208,6 +224,17 @@ export class MagneticsScreenView extends ScreenView {
     magnitudePanel.top = medium2Panel.bottom + 10;
     this.addChild(magnitudePanel);
 
+    const freeSourcePanel = new FreeSourceControlPanel(
+      model.surfaceCurrentProperty,
+      SURFACE_CURRENT_RANGE,
+      ui.surfaceCurrentTitleStringProperty,
+      ui.kFStringProperty,
+      a11y.controls.surfaceCurrentStringProperty,
+    );
+    freeSourcePanel.left = controlsLeft;
+    freeSourcePanel.top = magnitudePanel.bottom + 10;
+    this.addChild(freeSourcePanel);
+
     const toolsPanel = new ToolsControlPanel(model.shared, {
       title: ui.toolsStringProperty,
       components: ui.componentsStringProperty,
@@ -216,7 +243,7 @@ export class MagneticsScreenView extends ScreenView {
       angles: ui.anglesStringProperty,
     });
     toolsPanel.left = controlsLeft;
-    toolsPanel.top = magnitudePanel.bottom + 10;
+    toolsPanel.top = freeSourcePanel.bottom + 10;
     this.addChild(toolsPanel);
 
     listParent.moveToFront();
@@ -234,7 +261,15 @@ export class MagneticsScreenView extends ScreenView {
 
     this.addChild(
       new Node({
-        pdomOrder: [vectors.dragHandle, medium1Panel, medium2Panel, magnitudePanel, toolsPanel, resetAllButton],
+        pdomOrder: [
+          vectors.dragHandle,
+          medium1Panel,
+          medium2Panel,
+          magnitudePanel,
+          freeSourcePanel,
+          toolsPanel,
+          resetAllButton,
+        ],
       }),
     );
   }

@@ -24,7 +24,7 @@ function iconFrom(content: Node): ScreenIcon {
   });
 }
 
-export function createIntroIcon(): ScreenIcon {
+export function createElectricIcon(): ScreenIcon {
   return iconFrom(
     new Node({
       children: [background()],
@@ -32,7 +32,7 @@ export function createIntroIcon(): ScreenIcon {
   );
 }
 
-export function createMagneticsIcon(): ScreenIcon {
+export function createMagneticIcon(): ScreenIcon {
   return iconFrom(
     new Node({
       children: [background()],

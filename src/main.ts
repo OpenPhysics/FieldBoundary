@@ -21,10 +21,10 @@ import "./brand.js";
 
 import { onReadyToLaunch, PreferencesModel, Sim } from "scenerystack/sim";
 import { Tandem } from "scenerystack/tandem";
+import { ElectricScreen } from "./electric/ElectricScreen.js";
 import FieldBoundaryColors from "./FieldBoundaryColors.js";
 import { StringManager } from "./i18n/StringManager.js";
-import { IntroScreen } from "./intro/IntroScreen.js";
-import { MagneticsScreen } from "./magnetics/MagneticsScreen.js";
+import { MagneticScreen } from "./magnetic/MagneticScreen.js";
 import { FieldBoundaryPreferencesModel } from "./preferences/FieldBoundaryPreferencesModel.js";
 import { FieldBoundaryPreferencesNode } from "./preferences/FieldBoundaryPreferencesNode.js";
 
@@ -35,14 +35,14 @@ onReadyToLaunch(() => {
   const simPreferences = new FieldBoundaryPreferencesModel(Tandem.ROOT.createTandem("preferences"));
 
   const screens = [
-    new IntroScreen({
-      name: stringManager.getScreenNames().introStringProperty,
-      tandem: Tandem.ROOT.createTandem("introScreen"),
+    new ElectricScreen({
+      name: stringManager.getScreenNames().electricStringProperty,
+      tandem: Tandem.ROOT.createTandem("electricScreen"),
       backgroundColorProperty: FieldBoundaryColors.backgroundColorProperty,
     }),
-    new MagneticsScreen({
-      name: stringManager.getScreenNames().magneticsStringProperty,
-      tandem: Tandem.ROOT.createTandem("magneticsScreen"),
+    new MagneticScreen({
+      name: stringManager.getScreenNames().magneticStringProperty,
+      tandem: Tandem.ROOT.createTandem("magneticScreen"),
       backgroundColorProperty: FieldBoundaryColors.backgroundColorProperty,
     }),
   ];

@@ -1,8 +1,8 @@
 {
   "title": "Field Boundary",
   "screens": {
-    "intro": "Intro",
-    "magnetics": "Magnetics"
+    "electric": "Electric",
+    "magnetic": "Magnetic"
   },
   "ui": {
     "medium1": "Medium 1",
@@ -21,8 +21,14 @@
     "angles": "Angles",
     "magnitudeE": "E₁ magnitude",
     "magnitudeH": "H₁ magnitude",
+    "surfaceChargeTitle": "Surface charge",
+    "surfaceCurrentTitle": "Surface current",
+    "sigmaF": "σ_f",
+    "kF": "K_f",
     "equationElectric": "Electric BC (σ_f = 0)",
     "equationMagnetic": "Magnetic BC (K_f = 0)",
+    "equationElectricFree": "Electric BC (σ_f ≠ 0)",
+    "equationMagneticFree": "Magnetic BC (K_f ≠ 0)",
     "labelE1": "E₁",
     "labelE2": "E₂",
     "labelD1": "D₁",
@@ -35,11 +41,11 @@
     "tanRatioMagnetic": "tanθ₂/tanθ₁"
   },
   "a11y": {
-    "intro": {
+    "electric": {
       "screenSummary": {
         "playArea": "The play area shows two dielectric media meeting at a horizontal interface, with electric field E and displacement D vectors in each medium.",
-        "controlArea": "Controls set relative permittivity for each medium, E₁ magnitude, and toggles for components, field lines, protractor, and angles. Reset All restores the starting state.",
-        "interactionHint": "Drag the tip of E₁ to change its angle from the surface normal, then adjust εᵣ and watch which components stay continuous."
+        "controlArea": "Controls set relative permittivity for each medium, free surface charge σ_f, E₁ magnitude, and toggles for components, field lines, protractor, and angles. Reset All restores the starting state.",
+        "interactionHint": "Drag the tip of E₁ to change its angle from the surface normal, then adjust εᵣ or σ_f and watch which components stay continuous."
       },
       "currentDetails": "Electric boundary conditions at a planar interface.",
       "controls": {
@@ -48,14 +54,15 @@
         "eps2": "Relative permittivity of medium 2",
         "preset1": "Material preset for medium 1",
         "preset2": "Material preset for medium 2",
-        "magnitude": "Magnitude of E₁"
+        "magnitude": "Magnitude of E₁",
+        "surfaceCharge": "Free surface charge density σ_f on the interface"
       }
     },
-    "magnetics": {
+    "magnetic": {
       "screenSummary": {
         "playArea": "The play area shows two magnetic media meeting at a horizontal interface, with H and B vectors in each medium.",
-        "controlArea": "Controls set relative permeability for each medium, H₁ magnitude, and toggles for components, field lines, protractor, and angles. Reset All restores the starting state.",
-        "interactionHint": "Drag the tip of H₁ to change its angle from the surface normal, then adjust μᵣ and watch which components stay continuous."
+        "controlArea": "Controls set relative permeability for each medium, free surface current K_f, H₁ magnitude, and toggles for components, field lines, protractor, and angles. Reset All restores the starting state.",
+        "interactionHint": "Drag the tip of H₁ to change its angle from the surface normal, then adjust μᵣ or K_f and watch which components stay continuous."
       },
       "currentDetails": "Magnetic boundary conditions at a planar interface.",
       "controls": {
@@ -64,7 +71,8 @@
         "mu2": "Relative permeability of medium 2",
         "preset1": "Material preset for medium 1",
         "preset2": "Material preset for medium 2",
-        "magnitude": "Magnitude of H₁"
+        "magnitude": "Magnitude of H₁",
+        "surfaceCurrent": "Free surface current density K_f on the interface"
       }
     }
   },

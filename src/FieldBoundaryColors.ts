@@ -83,7 +83,7 @@ const FieldBoundaryColors = {
     projector: "#2e7d32",
   }),
 
-  /** Magnetic field H (primary on Magnetics). */
+  /** Magnetic field H (primary on Magnetic). */
   hFieldColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "hField", {
     default: "#42a5f5",
     projector: "#1565c0",
@@ -105,6 +105,24 @@ const FieldBoundaryColors = {
   freeComponentColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "freeComponent", {
     default: "#b0bec5",
     projector: "#78909c",
+  }),
+
+  /** Positive free surface charge σ_f > 0 markers on the interface. */
+  positiveChargeColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "positiveCharge", {
+    default: "#ff5252",
+    projector: "#c62828",
+  }),
+
+  /** Negative free surface charge σ_f < 0 markers on the interface. */
+  negativeChargeColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "negativeCharge", {
+    default: "#4fc3f7",
+    projector: "#1565c0",
+  }),
+
+  /** Free surface current K_f (⊙ out of page / ⊗ into page) markers. */
+  surfaceCurrentColorProperty: new ProfileColorProperty(FieldBoundaryNamespace, "surfaceCurrent", {
+    default: "#ffd54f",
+    projector: "#ef6c00",
   }),
 
   /** Field-line lattice stroke. */

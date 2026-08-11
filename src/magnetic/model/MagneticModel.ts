@@ -1,5 +1,5 @@
 /**
- * MagneticsModel.ts
+ * MagneticModel.ts
  *
  * Magnetic interface: drag H₁ angle/magnitude; derive H₂, B₁, B₂ from μᵣ.
  */
@@ -14,10 +14,12 @@ import {
   DEFAULT_FIELD_MAGNITUDE,
   DEFAULT_MU1,
   DEFAULT_MU2,
+  DEFAULT_SURFACE_CURRENT,
   RELATIVE_PARAMETER_RANGE,
+  SURFACE_CURRENT_RANGE,
 } from "../../FieldBoundaryConstants.js";
 
-export class MagneticsModel implements TModel {
+export class MagneticModel implements TModel {
   public readonly shared = new SharedModel();
 
   public readonly mu1Property = new NumberProperty(DEFAULT_MU1, {
@@ -25,6 +27,11 @@ export class MagneticsModel implements TModel {
   });
   public readonly mu2Property = new NumberProperty(DEFAULT_MU2, {
     range: RELATIVE_PARAMETER_RANGE,
+  });
+
+  /** Free surface current density K_f on the interface (+ẑ, out of page). */
+  public readonly surfaceCurrentProperty = new NumberProperty(DEFAULT_SURFACE_CURRENT, {
+    range: SURFACE_CURRENT_RANGE,
   });
 
   public readonly medium1PresetProperty = new StringProperty("vacuum") as Property<MaterialPresetId>;
@@ -42,10 +49,10 @@ export class MagneticsModel implements TModel {
 
   public constructor() {
     Multilink.multilink(
-      [this.h1AngleProperty, this.h1MagnitudeProperty, this.mu1Property, this.mu2Property],
-      (angle, magnitude, mu1, mu2) => {
+      [this.h1AngleProperty, this.h1MagnitudeProperty, this.mu1Property, this.mu2Property, this.surfaceCurrentProperty],
+      (angle, magnitude, mu1, mu2, surfaceCurrent) => {
         const h1 = fieldFromPolar(magnitude, angle);
-        const refracted = refractMagnetic(h1, mu1, mu2);
+        const refracted = refractMagnetic(h1, mu1, mu2, surfaceCurrent);
         this.h1Property.value = h1;
         this.h2Property.value = refracted.h2;
         this.b1Property.value = refracted.b1;
@@ -103,6 +110,7 @@ export class MagneticsModel implements TModel {
     this.shared.reset();
     this.mu1Property.reset();
     this.mu2Property.reset();
+    this.surfaceCurrentProperty.reset();
     this.medium1PresetProperty.reset();
     this.medium2PresetProperty.reset();
     this.h1AngleProperty.reset();
