@@ -4,6 +4,10 @@
     "electric": "Électrique",
     "magnetic": "Magnétique"
   },
+  "preferences": {
+    "title": "Simulation",
+    "exampleToggle": "Exemple de bascule"
+  },
   "ui": {
     "medium1": "Milieu 1",
     "medium2": "Milieu 2",

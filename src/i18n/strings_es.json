@@ -4,6 +4,10 @@
     "electric": "Eléctrico",
     "magnetic": "Magnético"
   },
+  "preferences": {
+    "title": "Simulación",
+    "exampleToggle": "Ejemplo de alternancia"
+  },
   "ui": {
     "medium1": "Medio 1",
     "medium2": "Medio 2",

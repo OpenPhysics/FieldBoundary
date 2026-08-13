@@ -105,4 +105,9 @@ export class StringManager {
   public getKeyboardHelpStrings() {
     return stringProperties.a11y.keyboardHelp;
   }
+
+  /** Preferences → Simulation labels. */
+  public getPreferences() {
+    return stringProperties.preferences;
+  }
 }

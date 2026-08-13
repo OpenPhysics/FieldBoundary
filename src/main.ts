@@ -25,9 +25,14 @@ import { ElectricScreen } from "./electric/ElectricScreen.js";
 import FieldBoundaryColors from "./FieldBoundaryColors.js";
 import { StringManager } from "./i18n/StringManager.js";
 import { MagneticScreen } from "./magnetic/MagneticScreen.js";
+import { FieldBoundaryPreferencesModel } from "./preferences/FieldBoundaryPreferencesModel.js";
+import { FieldBoundaryPreferencesNode } from "./preferences/FieldBoundaryPreferencesNode.js";
 
 onReadyToLaunch(() => {
   const stringManager = StringManager.getInstance();
+
+  // Simulation-specific preferences; initial values come from fieldBoundaryQueryParameters.
+  const fieldBoundaryPreferences = new FieldBoundaryPreferencesModel(Tandem.ROOT.createTandem("preferences"));
 
   const screens = [
     new ElectricScreen({
@@ -49,6 +54,13 @@ onReadyToLaunch(() => {
         supportsProjectorMode: true,
         // Enables keyboard-navigation highlight outlines
         supportsInteractiveHighlights: true,
+      },
+      simulationOptions: {
+        customPreferences: [
+          {
+            createContent: (tandem: Tandem) => new FieldBoundaryPreferencesNode(fieldBoundaryPreferences, tandem),
+          },
+        ],
       },
       localizationOptions: {
         // Adds a language picker in Preferences → Language

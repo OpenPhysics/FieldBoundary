@@ -4,6 +4,10 @@
     "electric": "Electric",
     "magnetic": "Magnetic"
   },
+  "preferences": {
+    "title": "Simulation",
+    "exampleToggle": "Example Toggle"
+  },
   "ui": {
     "medium1": "Medium 1",
     "medium2": "Medium 2",
