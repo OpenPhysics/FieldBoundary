@@ -1,5 +1,7 @@
 # Field Boundary
 
+[![CI](https://github.com/OpenPhysics/FieldBoundary/actions/workflows/ci.yml/badge.svg)](https://github.com/OpenPhysics/FieldBoundary/actions/workflows/ci.yml)
+
 Interactive Maxwell **planar interface** boundary conditions for \(\vec{E}/\vec{D}\) and \(\vec{H}/\vec{B}\). Drag the incident field, change \(\varepsilon_r\) or \(\mu_r\), and watch which components stay continuous — not Snell’s-law ray optics (see OpticsLab).
 
 ## Features

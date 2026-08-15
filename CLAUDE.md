@@ -79,6 +79,8 @@ npm run lint && npm run check && npm run build
 npm test
 ```
 
+`npm run release` intentionally skips `npm test` in some sims — append `&& npm test` before the version bump so a release cannot ship a failing suite.
+
 ## Compliance carve-outs
 
 ### `package.json` overrides
