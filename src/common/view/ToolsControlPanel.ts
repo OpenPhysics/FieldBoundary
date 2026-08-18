@@ -52,8 +52,8 @@ export type ToolsControlPanelStrings = {
 };
 
 const CHECKBOX_OPTIONS = {
-  checkboxColor: FieldBoundaryColors.controlSurfaceTextColorProperty,
-  checkboxColorBackground: FieldBoundaryColors.controlSurfaceColorProperty,
+  checkboxColor: FieldBoundaryColors.textColorProperty,
+  checkboxColorBackground: FieldBoundaryColors.panelBackgroundColorProperty,
 };
 
 export class ToolsControlPanel extends FieldBoundaryPanel {
